@@ -61,18 +61,16 @@ class SoapSapConnect extends Module
      */
     public function install()
     {
-        Configuration::updateValue('SOAPSAPCONNECT_LIVE_MODE', false);
+        //Configuration::updateValue('SOAPSAPCONNECT_LIVE_MODE', false);
 
         return parent::install() &&
             $this->registerHook('header') &&
-            $this->registerHook('backOfficeHeader') &&
-            $this->registerHook('displayLeftColumn') &&
-            $this->registerHook('displayRightColumn');
+            $this->registerHook('backOfficeHeader');
     }
 
     public function uninstall()
     {
-        Configuration::deleteByName('SOAPSAPCONNECT_LIVE_MODE');
+        //Configuration::deleteByName('SOAPSAPCONNECT_LIVE_MODE');
 
         return parent::uninstall();
     }
@@ -86,118 +84,14 @@ class SoapSapConnect extends Module
          * If values have been submitted in the form, process.
          */
         if (((bool)Tools::isSubmit('submitSoapSapConnectModule')) == true) {
-            $this->postProcess();
+
         }
 
         $this->context->smarty->assign('module_dir', $this->_path);
 
         $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
 
-        return $output.$this->renderForm();
-    }
-
-    /**
-     * Create the form that will be displayed in the configuration of your module.
-     */
-    protected function renderForm()
-    {
-        $helper = new HelperForm();
-
-        $helper->show_toolbar = false;
-        $helper->table = $this->table;
-        $helper->module = $this;
-        $helper->default_form_language = $this->context->language->id;
-        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG', 0);
-
-        $helper->identifier = $this->identifier;
-        $helper->submit_action = 'submitSoapSapConnectModule';
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
-            .'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
-
-        $helper->tpl_vars = array(
-            'fields_value' => $this->getConfigFormValues(), /* Add values for your inputs */
-            'languages' => $this->context->controller->getLanguages(),
-            'id_language' => $this->context->language->id,
-        );
-
-        return $helper->generateForm(array($this->getConfigForm()));
-    }
-
-    /**
-     * Create the structure of your form.
-     */
-    protected function getConfigForm()
-    {
-        return array(
-            'form' => array(
-                'legend' => array(
-                'title' => $this->l('Settings'),
-                'icon' => 'icon-cogs',
-                ),
-                'input' => array(
-                    array(
-                        'type' => 'switch',
-                        'label' => $this->l('Live mode'),
-                        'name' => 'SOAPSAPCONNECT_LIVE_MODE',
-                        'is_bool' => true,
-                        'desc' => $this->l('Use this module in live mode'),
-                        'values' => array(
-                            array(
-                                'id' => 'active_on',
-                                'value' => true,
-                                'label' => $this->l('Enabled')
-                            ),
-                            array(
-                                'id' => 'active_off',
-                                'value' => false,
-                                'label' => $this->l('Disabled')
-                            )
-                        ),
-                    ),
-                    array(
-                        'col' => 3,
-                        'type' => 'text',
-                        'prefix' => '<i class="icon icon-envelope"></i>',
-                        'desc' => $this->l('Enter a valid email address'),
-                        'name' => 'SOAPSAPCONNECT_ACCOUNT_EMAIL',
-                        'label' => $this->l('Email'),
-                    ),
-                    array(
-                        'type' => 'password',
-                        'name' => 'SOAPSAPCONNECT_ACCOUNT_PASSWORD',
-                        'label' => $this->l('Password'),
-                    ),
-                ),
-                'submit' => array(
-                    'title' => $this->l('Save'),
-                ),
-            ),
-        );
-    }
-
-    /**
-     * Set values for the inputs.
-     */
-    protected function getConfigFormValues()
-    {
-        return array(
-            'SOAPSAPCONNECT_LIVE_MODE' => Configuration::get('SOAPSAPCONNECT_LIVE_MODE', true),
-            'SOAPSAPCONNECT_ACCOUNT_EMAIL' => Configuration::get('SOAPSAPCONNECT_ACCOUNT_EMAIL', 'contact@prestashop.com'),
-            'SOAPSAPCONNECT_ACCOUNT_PASSWORD' => Configuration::get('SOAPSAPCONNECT_ACCOUNT_PASSWORD', null),
-        );
-    }
-
-    /**
-     * Save form data.
-     */
-    protected function postProcess()
-    {
-        $form_values = $this->getConfigFormValues();
-
-        foreach (array_keys($form_values) as $key) {
-            Configuration::updateValue($key, Tools::getValue($key));
-        }
+        return $output;
     }
 
     /**
@@ -218,6 +112,11 @@ class SoapSapConnect extends Module
     {
         $this->context->controller->addJS($this->_path.'/views/js/front.js');
         $this->context->controller->addCSS($this->_path.'/views/css/front.css');
+
+        //Configuration::get('myVariable'); // : retrieves a specific value from the database.
+        //Configuration::getMultiple(array('myFirstVariable', 'mySecondVariable', 'myThirdVariable')); // : retrieves several values from the database, and returns a PHP array.
+        //Configuration::updateValue('myVariable', $value); // : updates an existing database variable with a new value. If the variable does not yet exist, it creates it with that value.
+        //Configuration::deleteByName('myVariable'); // : deletes the database variable.
     }
 
     public function hookDisplayLeftColumn()

@@ -27,22 +27,9 @@
 	<h3><i class="icon icon-credit-card"></i> {l s='Soap Sap Connect' mod='soapSapConnect'}</h3>
 	<p>
 		<strong>{l s='Here is my new generic module!' mod='soapSapConnect'}</strong><br />
-		{l s='Thanks to PrestaShop, now I have a great module.' mod='soapSapConnect'}<br />
-		{l s='I can configure it using the following configuration form.' mod='soapSapConnect'}
 	</p>
 	<br />
 	<p>
 		{l s='This module will boost your sales!' mod='soapSapConnect'}
-	</p>
-</div>
-
-<div class="panel">
-	<h3><i class="icon icon-tags"></i> {l s='Documentation' mod='soapSapConnect'}</h3>
-	<p>
-		&raquo; {l s='You can get a PDF documentation to configure this module' mod='soapSapConnect'} :
-		<ul>
-			<li><a href="#" target="_blank">{l s='English' mod='soapSapConnect'}</a></li>
-			<li><a href="#" target="_blank">{l s='French' mod='soapSapConnect'}</a></li>
-		</ul>
 	</p>
 </div>
