@@ -61,11 +61,13 @@ class SoapSapConnect extends Module
      */
     public function install()
     {
-        //Configuration::updateValue('SOAPSAPCONNECT_LIVE_MODE', false);
-
         return parent::install() &&
             $this->registerHook('header') &&
-            $this->registerHook('backOfficeHeader');
+            $this->registerHook('backOfficeHeader') &&
+            $this->registerHook('displayNav') &&
+            $this->registerHook('actionPaymentConfirmation') &&
+            $this->registerHook('actionValidateOrder') &&
+            $this->registerHook('actionOrderStatusUpdate');
     }
 
     public function uninstall()
@@ -112,6 +114,18 @@ class SoapSapConnect extends Module
     {
         $this->context->controller->addJS($this->_path.'/views/js/front.js');
         $this->context->controller->addCSS($this->_path.'/views/css/front.css');
+    }
+
+    public function hookDisplayNav()
+    {
+        xdebug_break();
+        $this->context->smarty->assign([
+            'testVar1' => 'variable de prueba'
+        ]);
+
+        $fileV = __FILE__;
+
+        return $this->display(__FILE__, 'displayHeaderContent.tpl');
 
         //Configuration::get('myVariable'); // : retrieves a specific value from the database.
         //Configuration::getMultiple(array('myFirstVariable', 'mySecondVariable', 'myThirdVariable')); // : retrieves several values from the database, and returns a PHP array.
@@ -119,13 +133,22 @@ class SoapSapConnect extends Module
         //Configuration::deleteByName('myVariable'); // : deletes the database variable.
     }
 
-    public function hookDisplayLeftColumn()
-    {
-        /* Place your code here. */
+    public function hookActionPaymentConfirmation($params) {
+        xdebug_break();
+        return $params;
     }
 
-    public function hookDisplayRightColumn()
-    {
-        /* Place your code here. */
+    public function hookActionOrderStatusUpdate($params) {
+        // Este brinco
+        xdebug_break();
+        return $params;
     }
+
+     public function hookActionValidateOrder($params) {
+        // Este brinco
+        xdebug_break();
+        return $params;
+    }
+
+
 }
