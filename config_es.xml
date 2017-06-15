@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>soapSapConnect</name>
+	<displayName><![CDATA[Soap Sap Connect]]></displayName>
+	<version><![CDATA[0.0.1]]></version>
+	<description><![CDATA[Modulo de prueba para conectarse a sap]]></description>
+	<author><![CDATA[Cristian Gonzalez V]]></author>
+	<tab><![CDATA[administration]]></tab>
+	<confirmUninstall><![CDATA[Esta seguro de desinstalar el modulo ?]]></confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>
