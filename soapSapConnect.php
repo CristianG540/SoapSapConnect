@@ -26,6 +26,9 @@
 
 require_once('vendor/autoload.php');
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -121,6 +124,15 @@ class SoapSapConnect extends Module
     public function hookDisplayNav()
     {
         //xdebug_break();
+        // create a log channel
+        $log = new Logger('SoapSapConnect');
+        $log->pushHandler(new StreamHandler($this->local_path.'/logs/info.log', Logger::DEBUG));
+
+        // add records to the log
+        $log->warning('Foo');
+        $log->error('Bar');
+        $log->info('My logger is now ready');
+
         $this->context->smarty->assign([
             'testVar1' => 'variable de prueba'
         ]);
