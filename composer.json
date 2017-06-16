@@ -1,0 +1,18 @@
+{
+    "name": "Soap Sap Connect",
+    "description": "Modulo de PrestaShop para conectar a Sap via Soapt",
+    "keywords": ["module", "soap", "PrestaShop"],
+    "homepage": "https://github.com/CristianG540/SoapSapConnect",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Cristian Gonzalez V",
+            "email": "cristianneatproy@gmail.com"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "1.*",
+        "fergusean/nusoap": "*"
+    }
+
+}

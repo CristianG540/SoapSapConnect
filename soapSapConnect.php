@@ -24,6 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+require_once('vendor/autoload.php');
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -118,7 +120,7 @@ class SoapSapConnect extends Module
 
     public function hookDisplayNav()
     {
-        xdebug_break();
+        //xdebug_break();
         $this->context->smarty->assign([
             'testVar1' => 'variable de prueba'
         ]);
