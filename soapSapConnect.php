@@ -150,13 +150,13 @@ class SoapSapConnect extends Module
     }
 
     public function hookActionPaymentConfirmation($params) {
-        xdebug_break();
+        //xdebug_break();
         return $params;
     }
 
     public function hookActionOrderStatusUpdate($params) {
         // Este brinco
-        xdebug_break();
+        //xdebug_break();
         return $params;
     }
 
@@ -174,7 +174,7 @@ class SoapSapConnect extends Module
     public function hookActionValidateOrder($params) {
 
         $this->log->warning('hook validate order params: '.json_encode($params) );
-        return $params;
+        //return $params;
     }
 
 
