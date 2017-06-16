@@ -36,6 +36,7 @@ if (!defined('_PS_VERSION_')) {
 class SoapSapConnect extends Module
 {
     protected $config_form = false;
+    private $log;
 
     public function __construct()
     {
@@ -58,6 +59,9 @@ class SoapSapConnect extends Module
         $this->confirmUninstall = $this->l('Esta seguro de desinstalar el modulo ?');
 
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.7');
+        // create a log channel
+        $this->log = new Logger('SoapSapConnect');
+        $this->log->pushHandler(new StreamHandler($this->local_path.'/logs/info.log', Logger::DEBUG));
     }
 
     /**
@@ -124,14 +128,12 @@ class SoapSapConnect extends Module
     public function hookDisplayNav()
     {
         //xdebug_break();
-        // create a log channel
-        $log = new Logger('SoapSapConnect');
-        $log->pushHandler(new StreamHandler($this->local_path.'/logs/info.log', Logger::DEBUG));
 
         // add records to the log
-        $log->warning('Foo');
-        $log->error('Bar');
-        $log->info('My logger is now ready');
+        //
+        //$this->log->warning('Foo');
+        //$this->log->error('Bar');
+        //$this->log->info('My logger is now ready');
 
         $this->context->smarty->assign([
             'testVar1' => 'variable de prueba'
@@ -158,9 +160,20 @@ class SoapSapConnect extends Module
         return $params;
     }
 
-     public function hookActionValidateOrder($params) {
-        // Este brinco
-        xdebug_break();
+    /**
+     * After an order has been validated. Doesn't necessarily have to be paid.
+     * Called during the new order creation process, right after it has been created.
+     * @param  [array] $params  [
+     *                             'cart' => (object) Cart object,
+     *                             'order' => (object) Order object,
+     *                             'customer' => (object) Customer object,
+     *                             'currency' => (object) Currency object,
+     *                             'orderStatus' => (object) OrderState object
+     *                          ];
+     */
+    public function hookActionValidateOrder($params) {
+
+        $this->log->warning('hook validate order params: '.json_encode($params) );
         return $params;
     }
 
