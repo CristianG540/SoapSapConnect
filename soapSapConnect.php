@@ -28,6 +28,7 @@ require_once('vendor/autoload.php');
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Handler\ChromePHPHandler;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -62,6 +63,7 @@ class SoapSapConnect extends Module
         // create a log channel
         $this->log = new Logger('SoapSapConnect');
         $this->log->pushHandler(new StreamHandler($this->local_path.'/logs/info.log', Logger::DEBUG));
+        $log->pushHandler(new ChromePHPHandler());
     }
 
     /**
@@ -125,7 +127,7 @@ class SoapSapConnect extends Module
         $this->context->controller->addCSS($this->_path.'/views/css/front.css');
     }
 
-    public function hookDisplayNav()
+    public function hookDisplayNav($params)
     {
         //xdebug_break();
 
@@ -133,7 +135,11 @@ class SoapSapConnect extends Module
         //
         //$this->log->warning('Foo');
         //$this->log->error('Bar');
-        //$this->log->info('My logger is now ready');
+        $this->log->info('My logger is now ready', [
+            "attr1"  => "La madre",
+            "attr2"  => "ni herido",
+            "params" => $params
+        ]);
 
         $this->context->smarty->assign([
             'testVar1' => 'variable de prueba'
@@ -150,8 +156,7 @@ class SoapSapConnect extends Module
     }
 
     public function hookActionPaymentConfirmation($params) {
-        //xdebug_break();
-        return $params;
+        $this->log->warning('Se lanzo el hook de ActionPaymentConfirmation revisar: '.json_encode($params));
     }
 
     public function hookActionOrderStatusUpdate($params) {
@@ -173,7 +178,7 @@ class SoapSapConnect extends Module
      */
     public function hookActionValidateOrder($params) {
 
-        $this->log->warning('hook validate order params: '.json_encode($params) );
+        $this->log->info('hook validate order params: '.json_encode($params) );
         //return $params;
     }
 
