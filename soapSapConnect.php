@@ -100,8 +100,14 @@ class SoapSapConnect extends Module
     public function uninstall()
     {
         //Configuration::deleteByName('SOAPSAPCONNECT_LIVE_MODE');
+        return $this->uninstallDB() && parent::uninstall();
+    }
 
-        return parent::uninstall();
+    public function uninstallDB(){
+        $dbPrefijo = _DB_PREFIX_;
+        return Db::getInstance()->execute("
+            DROP TABLE `{$dbPrefijo}soapSapConnect_order`
+        ");
     }
 
     /**
