@@ -1,6 +1,6 @@
 <?php
 
-class soapSapDbUtils extends ObjectModel {
+class SoapSapDbUtils extends ObjectModel {
     public $id;
     public $sessionId;
     public $codCliente;

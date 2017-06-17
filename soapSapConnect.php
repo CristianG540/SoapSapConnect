@@ -201,7 +201,17 @@ class SoapSapConnect extends Module
 
         $this->log->info('hookActionValidateOrder ', $params );
 
-
+        /*
+        $wsDataObj = new SoapSapDbUtils();
+        $wsDataObj->sessionId = 'test';
+        $wsDataObj->codCliente = 'test';
+        $wsData = $wsDataObj->add();
+        if($wsData){
+            $this->log->info('Se creo correctamente el reg en BD', $wsData );
+        }else{
+            $this->log->erros('fallo al crear el reg en BD', $wsData );
+        }
+        */
 
         return true;
     }
