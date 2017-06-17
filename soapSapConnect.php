@@ -87,7 +87,7 @@ class SoapSapConnect extends Module
     public function installDB(){
         $dbPrefijo = _DB_PREFIX_;
         return Db::getInstance()->execute("
-            CREATE TABLE IF NOT EXISTS `{$dbPrefijo}_soapSapConnect_order` (
+            CREATE TABLE IF NOT EXISTS `{$dbPrefijo}soapSapConnect_order` (
                 `id` INT NOT NULL AUTO_INCREMENT ,
                 `sessionId` VARCHAR(300) NOT NULL COMMENT 'Session id que entrega el sap' ,
                 `codCliente` VARCHAR(200) NOT NULL COMMENT 'La cedula del usario cliente que hace la compra' ,
