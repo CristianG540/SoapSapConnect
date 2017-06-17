@@ -80,7 +80,21 @@ class SoapSapConnect extends Module
             $this->registerHook('displayNav') &&
             $this->registerHook('actionPaymentConfirmation') &&
             $this->registerHook('actionValidateOrder') &&
-            $this->registerHook('actionOrderStatusUpdate');
+            $this->registerHook('actionOrderStatusUpdate') &&
+            $this->installDB();
+    }
+
+    public function installDB(){
+        $dbPrefijo = _DB_PREFIX_;
+        return Db::getInstance()->execute("
+            CREATE TABLE IF NOT EXISTS `{$dbPrefijo}_soapSapConnect_order` (
+                `id` INT NOT NULL AUTO_INCREMENT ,
+                `sessionId` VARCHAR(300) NOT NULL COMMENT 'Session id que entrega el sap' ,
+                `codCliente` VARCHAR(200) NOT NULL COMMENT 'La cedula del usario cliente que hace la compra' ,
+                `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de creacion, mas o menos el momento en que se logea en sap' ,
+                PRIMARY KEY (`id`)
+            ) ENGINE = InnoDB;
+        ");
     }
 
     public function uninstall()
@@ -131,17 +145,11 @@ class SoapSapConnect extends Module
 
     public function hookDisplayNav($params)
     {
-        //xdebug_break();
-
         // add records to the log
         //
         //$this->log->warning('Foo');
         //$this->log->error('Bar');
-        $this->log->info('My logger is now ready', [
-            "attr1"  => "La madre",
-            "attr2"  => "ni herido",
-            "params" => $params
-        ]);
+        //$this->log->info('My logger is now ready', ["attr1"  => "La madre", "attr2"  => "ni herido"]);
 
         $this->context->smarty->assign([
             'testVar1' => 'variable de prueba'
@@ -157,14 +165,18 @@ class SoapSapConnect extends Module
         //Configuration::deleteByName('myVariable'); // : deletes the database variable.
     }
 
+    public function hookActionCustomerAccountAdd($params){
+        $this->log->warning('Se lanzo el hook ActionCustomerAccountAdd revisar: '.json_encode($params));
+    }
+
     public function hookActionPaymentConfirmation($params) {
         $this->log->warning('Se lanzo el hook de ActionPaymentConfirmation revisar: '.json_encode($params));
+        return true;
     }
 
     public function hookActionOrderStatusUpdate($params) {
-        // Este brinco
-        //xdebug_break();
-        return $params;
+        $this->log->info('Se activo el hook de ActionOrderStatusUpdate', $params);
+        return true;
     }
 
     /**
@@ -180,8 +192,11 @@ class SoapSapConnect extends Module
      */
     public function hookActionValidateOrder($params) {
 
-        $this->log->info('hook validate order params: '.json_encode($params) );
-        //return $params;
+        $this->log->info('hookActionValidateOrder ', $params );
+
+
+
+        return true;
     }
 
 
