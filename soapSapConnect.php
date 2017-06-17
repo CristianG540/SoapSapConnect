@@ -25,6 +25,7 @@
 */
 
 require_once('vendor/autoload.php');
+require_once('classes/clsSoapSapDbUtils.php');
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
