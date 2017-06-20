@@ -154,7 +154,7 @@ class SoapSapConnect extends Module
     {
 
         // Create a new client object using a WSDL URL
-        /*$soap = new SoapClient('http://192.168.10.102/B1WS/WebReferences/LoginService.wsdl', [
+        $soap = new SoapClient('http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl', [
             # This array and its values are optional
             'soap_version' => SOAP_1_1,
             'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
@@ -164,7 +164,10 @@ class SoapSapConnect extends Module
             'exceptions' => TRUE
         ]);
 
-        $params2 = array(
+        $this->log->info('functions', $soap->__getFunctions() );
+        $this->log->info('types', $soap->__getTypes() );
+
+        /*$params2 = array(
             'DatabaseServer'  => '192.168.10.102', //string
             'DatabaseName'    => 'MERCHANDISING', //string
             'DatabaseType'    => 'dst_MSSQL2012', //DatabaseType
@@ -175,7 +178,7 @@ class SoapSapConnect extends Module
         );
         $response = $soap->Login($params2);*/
 
-        $login = new nusoap_client("http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl", true);
+        /*$login = new nusoap_client("http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl", true);
         $error  = $login->getError();
         if(!$error){
             $params = array(
@@ -195,15 +198,7 @@ class SoapSapConnect extends Module
             $this->log->info(json_encode($soapRes));
         }else{
             $this->log->error($error);
-        }
-
-
-
-        // add records to the log
-        //
-        //$this->log->warning('Foo');
-        //$this->log->error('Bar');
-        //$this->log->info('My logger is now ready', ["attr1"  => "La madre", "attr2"  => "ni herido"]);
+        }*/
 
         $this->context->smarty->assign([
             'testVar1' => 'variable de prueba'
@@ -217,6 +212,10 @@ class SoapSapConnect extends Module
         //Configuration::getMultiple(array('myFirstVariable', 'mySecondVariable', 'myThirdVariable')); // : retrieves several values from the database, and returns a PHP array.
         //Configuration::updateValue('myVariable', $value); // : updates an existing database variable with a new value. If the variable does not yet exist, it creates it with that value.
         //Configuration::deleteByName('myVariable'); // : deletes the database variable.
+        //
+        //$this->log->warning('Foo');
+        //$this->log->error('Bar');
+        //$this->log->info('My logger is now ready', ["attr1"  => "La madre", "attr2"  => "ni herido"]);
     }
 
     public function hookActionCustomerAccountAdd($params){
