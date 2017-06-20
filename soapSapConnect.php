@@ -26,6 +26,7 @@
 
 require_once('vendor/autoload.php');
 require_once('classes/clsSoapSapDbUtils.php');
+require_once('classes/clsWebServiceHandle.php');
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -153,6 +154,8 @@ class SoapSapConnect extends Module
     public function hookDisplayNav($params)
     {
 
+        // CODIGO DE PRUEBA USANDO LA LIBERIA SOAP NATIVA DE PHP
+        /*
         // Create a new client object using a WSDL URL
         $soap = new SoapClient('http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl', [
             # This array and its values are optional
@@ -183,29 +186,14 @@ class SoapSapConnect extends Module
             $this->log->info('Request: '. $soap->__getLastRequest() );
             $this->log->info('Response: '. $soap->__getLastResponse() );
             $this->log->error('Error en la peticion:'.json_encode($e->getMessage()) );
-        }
+        } */
 
-        /*$login = new nusoap_client("http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl", true);
-        $error  = $login->getError();
-        if(!$error){
-            $params = array(
-                'DatabaseServer'  => '192.168.10.102', //string
-                'DatabaseName'    => 'MERCHANDISING', //string
-                'DatabaseType'    => 'dst_MSSQL2012', //DatabaseType
-                'CompanyUsername' => 'manager', //string
-                'CompanyPassword' => 'Pa$$w0rd', //string
-                'Language'        => 'ln_Spanish', //Language
-                'LicenseServer'   => '192.168.10.102:30000' //string
-            );
-            $soapRes = $login->call('Login', $params);
-            $error  = $login->getError();
-            if($error){
-               $this->log->error($error);
-            }
-            $this->log->info(json_encode($soapRes));
-        }else{
-            $this->log->error($error);
-        }*/
+        $wsConnection = new WebServiceHandle();
+        $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
+        $res = $wsConnection->login();
+
+        $this->log->info('Respuesta webservice: '. $res );
+
 
         $this->context->smarty->assign([
             'testVar1' => 'variable de prueba'
