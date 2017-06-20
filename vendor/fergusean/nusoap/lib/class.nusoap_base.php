@@ -708,7 +708,7 @@ class nusoap_base {
 	}
 	// serialize envelope
 	return
-	'<?xml version="1.0" encoding="'.$this->soap_defencoding .'"?'.">".
+	/*'<?xml version="1.0" encoding="'.$this->soap_defencoding .'"?'.">".*/
 	'<SOAP-ENV:Envelope'.$ns_string.">".
 	$headers.
 	"<SOAP-ENV:Body>".
