@@ -154,7 +154,7 @@ class SoapSapConnect extends Module
     {
 
         // Create a new client object using a WSDL URL
-        $soap = new SoapClient('http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl', [
+       /* $soap = new SoapClient('http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl', [
             # This array and its values are optional
             'soap_version' => SOAP_1_1,
             'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
@@ -175,7 +175,7 @@ class SoapSapConnect extends Module
         );
         $response = $soap->__soapCall("Login", $params);
 
-        p($response);
+        p($response);*/
 
         // add records to the log
         //
