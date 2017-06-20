@@ -180,8 +180,8 @@ class SoapSapConnect extends Module
             $response = $soap->Login($params2);
             $this->log->info('Respuesta del ws: '.json_encode($response));
         } catch (Exception $e) {
-            $this->log->info('Request: '. json_encode($soap->__getLastRequest()) );
-            $this->log->info('Response: '. json_encode($soap->__getLastResponse()) );
+            $this->log->info('Request: '. $soap->__getLastRequest() );
+            $this->log->info('Response: '. $soap->__getLastResponse() );
             $this->log->error('Error en la peticion:'.json_encode($e->getMessage()) );
         }
 
