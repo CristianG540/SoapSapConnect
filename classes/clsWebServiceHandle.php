@@ -31,6 +31,11 @@ class WebServiceHandle {
      * @var string
      */
     protected $log;
+    /**
+     * El id de la secion que me da el sap, este se usa para los pedidos y para el logout
+     * @var string
+     */
+    protected $sessionId = '';
 
     /**
      * Inicia la insancia de monolog
@@ -46,7 +51,7 @@ class WebServiceHandle {
         $login = new nusoap_client($this->loginService, true);
         $error  = $login->getError();
         if(!$error){
-            $params = array(
+            $params = [
                 'DatabaseServer'  => '192.168.10.102', //string
                 'DatabaseName'    => 'MERCHANDISING', //string
                 'DatabaseType'    => 'dst_MSSQL2012', //DatabaseType
@@ -54,16 +59,41 @@ class WebServiceHandle {
                 'CompanyPassword' => 'Pa$$w0rd', //string
                 'Language'        => 'ln_Spanish', //Language
                 'LicenseServer'   => '192.168.10.102:30000' //string
-            );
+            ];
             $soapRes = $login->call('Login', $params);
             $error  = $login->getError();
             if($error){
-               $this->log->error($error);
+               $this->log->error('Error en el login SAP: '. json_encode($error) );
+               return false;
             }
             $this->log->info(json_encode($soapRes));
-            return $soapRes['SessionID'];
+            $this->sessionId = $soapRes['SessionID'];
+            return $this->sessionId;
         }else{
-            $this->log->error($error);
+            $this->log->error('Error en el login SAP: '. json_encode($error) );
+            return false;
+        }
+    }
+
+    public function logout($sessionId = '') {
+        $id = ($sessionId) ? $sessionId : $this->sessionId;
+        $logout = new nusoap_client($this->loginService, true);
+        $params = [
+            'SessionID' => $id
+        ];
+        $logout->setHeaders(['MsgHeader' => $params]);
+        $error = $logout->getError();
+        if(!$error){
+            $soapRes = $logout->call('Logout', '<Logout xmlns="LoginService" />');
+            $error  = $logout->getError();
+            if($error){
+               $this->log->error('Error en el logout SAP: '. json_encode($error) );
+               return false;
+            }
+            $this->log->info(json_encode($soapRes));
+            return true;
+        }else{
+            $this->log->error('Error en el logout SAP: '. json_encode($error) );
             return false;
         }
     }
