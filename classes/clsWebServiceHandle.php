@@ -66,7 +66,7 @@ class WebServiceHandle {
                $this->log->error('Error en el login SAP: '. json_encode($error) );
                return false;
             }
-            $this->log->info(json_encode($soapRes));
+            $this->log->info("respuesta login: ".json_encode($soapRes));
             $this->sessionId = $soapRes['SessionID'];
             return $this->sessionId;
         }else{
@@ -90,7 +90,7 @@ class WebServiceHandle {
                $this->log->error('Error en el logout SAP: '. json_encode($error) );
                return false;
             }
-            $this->log->info(json_encode($soapRes));
+            $this->log->info("respuesta logout: ". json_encode($soapRes));
             return true;
         }else{
             $this->log->error('Error en el logout SAP: '. json_encode($error) );
