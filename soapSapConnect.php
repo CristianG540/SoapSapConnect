@@ -164,7 +164,18 @@ class SoapSapConnect extends Module
             'exceptions' => TRUE
         ]);
 
-        p($soap);
+        $params = array(
+            'DatabaseServer'  => '192.168.10.102', //string
+            'DatabaseName'    => 'MERCHANDISING', //string
+            'DatabaseType'    => 'dst_MSSQL2012', //DatabaseType
+            'CompanyUsername' => 'manager', //string
+            'CompanyPassword' => 'Pa$$w0rd', //string
+            'Language'        => 'ln_Spanish', //Language
+            'LicenseServer'   => '192.168.10.102:30000' //string
+        );
+        $response = $soap->__soapCall("Login", array($params));
+
+        p($response);
 
         // add records to the log
         //
