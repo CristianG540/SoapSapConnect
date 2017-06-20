@@ -32,7 +32,7 @@ class WebServiceHandle {
      */
     protected $log;
     /**
-     * El id de la secion que me da el sap, este se usa para los pedidos y para el logout
+     * El id de la sesion que me da el sap, este se usa para los pedidos y para el logout
      * @var string
      */
     protected $sessionId = '';
@@ -48,8 +48,7 @@ class WebServiceHandle {
     }
 
     public function login() {
-        $login = new nusoap_client($this->loginService, true);
-        $error  = $login->getError();
+        $error  = $this->loginService->getError();
         if(!$error){
             $params = [
                 'DatabaseServer'  => '192.168.10.102', //string
@@ -60,8 +59,8 @@ class WebServiceHandle {
                 'Language'        => 'ln_Spanish', //Language
                 'LicenseServer'   => '192.168.10.102:30000' //string
             ];
-            $soapRes = $login->call('Login', $params);
-            $error  = $login->getError();
+            $soapRes = $this->loginService->call('Login', $params);
+            $error  = $this->loginService->getError();
             if($error){
                $this->log->error('Error en el login SAP: '. json_encode($error) );
                return false;
@@ -77,15 +76,14 @@ class WebServiceHandle {
 
     public function logout($sessionId = '') {
         $id = ($sessionId) ? $sessionId : $this->sessionId;
-        $logout = new nusoap_client($this->loginService, true);
         $params = [
             'SessionID' => $id
         ];
-        $logout->setHeaders(['MsgHeader' => $params]);
-        $error = $logout->getError();
+        $this->loginService->setHeaders(['MsgHeader' => $params]);
+        $error = $this->loginService->getError();
         if(!$error){
-            $soapRes = $logout->call('Logout', '<Logout xmlns="LoginService" />');
-            $error  = $logout->getError();
+            $soapRes = $this->loginService->call('Logout', '<Logout xmlns="LoginService" />');
+            $error  = $this->loginService->getError();
             if($error){
                $this->log->error('Error en el logout SAP: '. json_encode($error) );
                return false;
@@ -98,12 +96,17 @@ class WebServiceHandle {
         }
     }
 
+
+
+
     public function __get($property)
     {
         switch ($property)
         {
             case 'loginService':
                 return $this->loginService;
+            case 'ordersService':
+                return $this->ordersService;
             //etc.
         }
     }
@@ -113,7 +116,10 @@ class WebServiceHandle {
         switch ($property)
         {
             case 'loginService':
-                $this->loginService = $value;
+                $this->loginService = new nusoap_client($value, true);
+                break;
+            case 'ordersService':
+                $this->ordersService = new nusoap_client($value, true);
                 break;
             //etc.
         }

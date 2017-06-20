@@ -192,12 +192,12 @@ class SoapSapConnect extends Module
         $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
 
         $sessionId = $wsConnection->login();
-        $this->log->info('El id de la secion es: '. $sessionId );
+        $this->log->info('El id de la sesion es: '. $sessionId );
 
         if( $wsConnection->logout() ){
-            $this->log->info('Se cerro la secion correctamente en SAP.');
+            $this->log->info('Se cerro la sesion correctamente en SAP.');
         }else{
-            $this->log->error('No se pudo cerrar la secion en SAP.');
+            $this->log->error('No se pudo cerrar la sesion en SAP.');
         }
 
 
