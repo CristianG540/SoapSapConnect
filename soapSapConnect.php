@@ -167,16 +167,21 @@ class SoapSapConnect extends Module
         $this->log->info('functions', $soap->__getFunctions() );
         $this->log->info('types', $soap->__getTypes() );
 
-        /*$params2 = array(
-            'DatabaseServer'  => '192.168.10.102', //string
-            'DatabaseName'    => 'MERCHANDISING', //string
-            'DatabaseType'    => 'dst_MSSQL2012', //DatabaseType
-            'CompanyUsername' => 'manager', //string
-            'CompanyPassword' => 'Pa$$w0rd', //string
-            'Language'        => 'ln_Spanish', //Language
-            'LicenseServer'   => '192.168.10.102:30000' //string
-        );
-        $response = $soap->Login($params2);*/
+        try {
+            $params2 = array(
+                'DatabaseServer'  => '192.168.10.102', //string
+                'DatabaseName'    => 'MERCHANDISING', //string
+                'DatabaseType'    => 'dst_MSSQL2012', //DatabaseType
+                'CompanyUsername' => 'manager', //string
+                'CompanyPassword' => 'Pa$$w0rd', //string
+                'Language'        => 'ln_Spanish', //Language
+                'LicenseServer'   => '192.168.10.102:30000' //string
+            );
+            $response = $soap->Login($params2);
+            $this->log->info('Respuesta del ws: '.json_encode($response));
+        } catch (Exception $e) {
+            $this->log->error('Error en la peticion', $e->getMessage());
+        }
 
         /*$login = new nusoap_client("http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl", true);
         $error  = $login->getError();
