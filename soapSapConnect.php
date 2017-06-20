@@ -152,6 +152,18 @@ class SoapSapConnect extends Module
 
     public function hookDisplayNav($params)
     {
+
+        // Create a new client object using a WSDL URL
+        $soap = new SoapClient('http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl', [
+            # This array and its values are optional
+            'soap_version' => SOAP_1_1,
+            'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
+            'cache_wsdl' => WSDL_CACHE_BOTH,
+            # Helps with debugging
+            'trace' => TRUE,
+            'exceptions' => TRUE
+        ]);
+
         // add records to the log
         //
         //$this->log->warning('Foo');
@@ -215,6 +227,5 @@ class SoapSapConnect extends Module
 
         return true;
     }
-
 
 }
