@@ -154,7 +154,7 @@ class SoapSapConnect extends Module
     {
 
         // Create a new client object using a WSDL URL
-       /* $soap = new SoapClient('http://192.168.10.102/B1WS/WebReferences/LoginService.wsdl', [
+        /*$soap = new SoapClient('http://192.168.10.102/B1WS/WebReferences/LoginService.wsdl', [
             # This array and its values are optional
             'soap_version' => SOAP_1_1,
             'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
@@ -173,9 +173,27 @@ class SoapSapConnect extends Module
             'Language'        => 'ln_Spanish', //Language
             'LicenseServer'   => '192.168.10.102:30000' //string
         );
-        $response = $soap->__soapCall("Login", $params2);
+        $response = $soap->Login($params2);*/
 
-        p($response);*/
+        $login = new nusoap_client("http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl", true);
+        $error  = $login->getError();
+        if(!$error){
+            $params = array(
+                'DatabaseServer'  => '192.168.10.102', //string
+                'DatabaseName'    => 'MERCHANDISING', //string
+                'DatabaseType'    => 'dst_MSSQL2012', //DatabaseType
+                'CompanyUsername' => 'manager', //string
+                'CompanyPassword' => 'Pa$$w0rd', //string
+                'Language'        => 'ln_Spanish', //Language
+                'LicenseServer'   => '192.168.10.102:30000' //string
+            );
+            $soapRes = $login->call('Login', $params);
+            p($soapRes);
+        }else{
+            p($error);
+        }
+
+
 
         // add records to the log
         //
