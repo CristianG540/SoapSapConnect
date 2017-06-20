@@ -175,7 +175,7 @@ class SoapSapConnect extends Module
         );
         $response = $soap->Login($params2);*/
 
-        $login = new nusoap_client("http://192.168.10.102/B1WS/WebReferences/LoginService.wsdl", true);
+        $login = new nusoap_client("http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl", true);
         $error  = $login->getError();
         if(!$error){
             $params = array(
