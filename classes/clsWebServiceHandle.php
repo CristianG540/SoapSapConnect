@@ -36,6 +36,16 @@ class WebServiceHandle {
      * @var string
      */
     protected $sessionId = '';
+    /**
+     * Los datos del cliente
+     * @var array
+     */
+    protected $cliente = [
+        'codCliente' => '',
+        'nombre'     => '',
+        'apellidos'  => '',
+        'email'      => '',
+    ];
 
     /**
      * Inicia la insancia de monolog
@@ -96,7 +106,50 @@ class WebServiceHandle {
         }
     }
 
+    public function order($order, $sessionId = '') {
+        $id = ($sessionId) ? $sessionId : $this->sessionId;
+        $paramsH = [
+            'SessionID'   => $id,
+            'ServiceName' => 'OrdersService'
+        ];
+        $this->ordersService->setHeaders(['MsgHeader' => $paramsH]);
 
+        $products = array_reduce($order['productos'], function($carry, $item){
+            $carry .= '<DocumentLine>'
+                            . "<ItemCode>{$item['referencia']}</ItemCode>"
+                            . "<Quantity>{$item['cantidad']}</Quantity>"
+                    . '</DocumentLine>';
+            return $carry;
+        }, '');
+
+        $error  = $this->ordersService->getError();
+        if(!$error){
+            $soapRes = $this->ordersService->call('Add', ''
+                    . '<Add>'
+                        . '<Document>'
+                                . '<Confirmed>N</Confirmed>'
+                                . "<CardCode>c{$this->cliente[codCliente]}</CardCode>"
+                                . '<Comments>Orden via motorepuestos.com.co</Comments>'
+                                . "<DocDueDate>{$order['fecha_creacion']}</DocDueDate>"
+                                . "<NumAtCard>{$order['id']}</NumAtCard>"
+                                . '<DocumentLines>'
+                                    . $products
+                                . '</DocumentLines>'
+                        . '</Document>'
+                    . '</Add>'
+                    );
+            $error  = $this->ordersService->getError();
+            if($error){
+               $this->log->error('Error al hacer el pedido SAP: '. json_encode($error) );
+               return false;
+            }
+            $this->log->info("respuesta del pedido a SAP: ".json_encode($soapRes));
+            return true;
+        }else{
+            $this->log->error('Error al procesar la orden SAP: '. json_encode($error) );
+            return false;
+        }
+    }
 
 
     public function __get($property)
@@ -107,6 +160,8 @@ class WebServiceHandle {
                 return $this->loginService;
             case 'ordersService':
                 return $this->ordersService;
+            case 'cliente':
+                return $this->cliente;
             //etc.
         }
     }
@@ -120,6 +175,9 @@ class WebServiceHandle {
                 break;
             case 'ordersService':
                 $this->ordersService = new nusoap_client($value, true);
+                break;
+            case 'cliente':
+                $this->cliente = $value;
                 break;
             //etc.
         }

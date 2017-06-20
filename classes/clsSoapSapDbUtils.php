@@ -5,7 +5,6 @@ class SoapSapDbUtils extends ObjectModel {
     public $sessionId;
     public $codCliente;
     public $created_at;
-    protected $bar;
 
     /**
      * @see   ObjectModel::$definition
@@ -30,30 +29,5 @@ class SoapSapDbUtils extends ObjectModel {
         ]
 
     ];
-
-    public function __get($property)
-    {
-        switch ($property)
-        {
-            case 'bar':
-                return $this->bar;
-            //etc.
-        }
-    }
-
-    public function __set($property, $value)
-    {
-        switch ($property)
-        {
-            case 'bar':
-                $this->bar = $value;
-                break;
-            //etc.
-        }
-    }
 }
-/*
-$foo = new Foo();
-$foo->bar = 1;
-$foo->bar++;
-*/
+

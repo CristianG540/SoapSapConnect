@@ -188,21 +188,6 @@ class SoapSapConnect extends Module
             $this->log->error('Error en la peticion:'.json_encode($e->getMessage()) );
         } */
 
-        $wsConnection = new WebServiceHandle();
-        $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
-
-        $sessionId = $wsConnection->login();
-        $this->log->info('El id de la sesion es: '. $sessionId );
-
-        if( $wsConnection->logout() ){
-            $this->log->info('Se cerro la sesion correctamente en SAP.');
-        }else{
-            $this->log->error('No se pudo cerrar la sesion en SAP.');
-        }
-
-
-
-
         $this->context->smarty->assign([
             'testVar1' => 'variable de prueba'
         ]);
@@ -249,6 +234,36 @@ class SoapSapConnect extends Module
     public function hookActionValidateOrder($params) {
 
         $this->log->info('hookActionValidateOrder ', $params );
+        $address = new Address(intval($params['cart']->id_address_delivery));
+        $productos = array_map(function ($val){
+            return [
+                'referencia' => $val['reference'],
+                'cantidad'   => $val['cart_quantity']
+            ];
+        }, $params['order']->product_list);
+        $orden = [
+            'id'             => $params['order']->id,
+            'fecha_creacion' => $params['order']->date_add,
+            'productos'      => $productos
+        ];
+
+        $wsConnection = new WebServiceHandle();
+        $wsConnection->cliente = [
+            'codCliente' => $address->dni,
+            'nombre'     => $params['customer']->firstname,
+            'apellidos'  => $params['customer']->lastname,
+            'email'      => $params['customer']->email,
+        ];
+        $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
+        $wsConnection->ordersService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/OrdersService.wsdl';
+
+        $wsConnection->order($orden);
+
+        if( $wsConnection->logout() ){
+            $this->log->info('Se cerro la sesion correctamente en SAP.');
+        }else{
+            $this->log->error('No se pudo cerrar la sesion en SAP.');
+        }
 
         /*
         $wsDataObj = new SoapSapDbUtils();
