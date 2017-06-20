@@ -164,7 +164,7 @@ class SoapSapConnect extends Module
             'exceptions' => TRUE
         ]);
 
-        $this->log->info('datos del soap', $soap);
+        p($soap);
 
         // add records to the log
         //
