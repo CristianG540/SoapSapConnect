@@ -61,7 +61,7 @@ class WebServiceHandle {
                $this->log->error($error);
             }
             $this->log->info(json_encode($soapRes));
-            return $soapRes;
+            return $soapRes['SessionID'];
         }else{
             $this->log->error($error);
             return false;
