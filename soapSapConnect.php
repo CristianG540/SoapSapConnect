@@ -180,7 +180,7 @@ class SoapSapConnect extends Module
             $response = $soap->Login($params2);
             $this->log->info('Respuesta del ws: '.json_encode($response));
         } catch (Exception $e) {
-            $this->log->error('Error en la peticion', $e->getMessage());
+            $this->log->error('Error en la peticion:'.json_encode($e->getMessage()) );
         }
 
         /*$login = new nusoap_client("http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl", true);
