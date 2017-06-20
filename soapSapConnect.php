@@ -173,7 +173,7 @@ class SoapSapConnect extends Module
             'Language'        => 'ln_Spanish', //Language
             'LicenseServer'   => '192.168.10.102:30000' //string
         );
-        $response = $soap->__soapCall("Login", array($params));
+        $response = $soap->__soapCall("Login", $params);
 
         p($response);
 
