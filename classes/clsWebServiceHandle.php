@@ -121,7 +121,8 @@ class WebServiceHandle {
      * tiene los productos, la fecha en que se creo y el id de la orden
      * @param  string $sessionId Opcionalmente se le puede enviar el id de la sesion en sap con el que
      * se quiere procesar la orden
-     * @return bool            me regresa un falso o un verdadero dependiendo de si se proceso o no la orden
+     * @return integer  me regresa el numero de la orden dependiendo de si se proceso o no la orden
+     * si no se procesa retorna un false
      */
     public function order($order, $sessionId = '') {
         $id = ($sessionId) ? $sessionId : $this->sessionId;
@@ -191,7 +192,7 @@ class WebServiceHandle {
                 return false;
             }
             $this->log->info("respuesta del pedido a SAP: ". json_encode($this->utf8ize($soapRes)) );
-            return true;
+            return $soapRes['DocumentParams']['DocEntry'];
         }else{
             $this->log->error('Error al procesar la orden SAP: '. json_encode($error) );
             return false;
@@ -225,6 +226,8 @@ class WebServiceHandle {
                 return $this->ordersService;
             case 'cliente':
                 return $this->cliente;
+            case 'sessionId':
+                return $this->sessionId;
             //etc.
         }
     }

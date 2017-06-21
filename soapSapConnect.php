@@ -244,6 +244,8 @@ class SoapSapConnect extends Module
         ];
 
         try {
+            $wsDataObj = new SoapSapDbUtils();
+
             $wsConnection = new WebServiceHandle();
             $wsConnection->cliente = [
                 'codCliente' => $address->dni,
@@ -257,11 +259,20 @@ class SoapSapConnect extends Module
 
             if( $wsConnection->login() ){
                 $this->log->info('***************************Se abrio correctamente la sesion SAP**************************************');
+                $wsDataObj->sessionId = $wsConnection->sessionId;
+                $wsDataObj->codCliente = $address->dni;
             }else{
                 $this->log->error('***************************No se pudo iniciar la sesion en SAP.**************************************');
             }
 
-            $wsConnection->order($orden);
+            $numOrden = $wsConnection->order($orden);
+            if( $numOrden ){
+                $wsData = $wsDataObj->add();
+                if( !wsData ){
+                    $this->log->error('fallo al crear el reg en BD', $wsData );
+                }
+            }
+
 
             if( $wsConnection->logout() ){
                 $this->log->info('****************************Se cerro la sesion correctamente en SAP***********************************');
