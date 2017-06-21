@@ -128,7 +128,7 @@ class WebServiceHandle {
                     . '<Add>'
                         . '<Document>'
                                 . '<Confirmed>N</Confirmed>'
-                                . "<CardCode>c{$this->cliente[codCliente]}</CardCode>"
+                                . "<CardCode>c{$this->cliente['codCliente']}</CardCode>"
                                 . '<Comments>Orden via motorepuestos.com.co</Comments>'
                                 . "<DocDueDate>{$order['fecha_creacion']}</DocDueDate>"
                                 . "<NumAtCard>{$order['id']}</NumAtCard>"

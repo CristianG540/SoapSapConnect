@@ -151,9 +151,13 @@ class SoapSapConnect extends Module
         $this->context->controller->addCSS($this->_path.'/views/css/front.css');
     }
 
-    public function hookDisplayNav($params)
-    {
+    public function hookDisplayNav($params){
 
+        $this->context->smarty->assign([
+            'testVar1' => 'variable de prueba'
+        ]);
+
+        return $this->display(__FILE__, 'displayHeaderContent.tpl');
         // CODIGO DE PRUEBA USANDO LA LIBERIA SOAP NATIVA DE PHP
         /*
         // Create a new client object using a WSDL URL
@@ -187,14 +191,6 @@ class SoapSapConnect extends Module
             $this->log->info('Response: '. $soap->__getLastResponse() );
             $this->log->error('Error en la peticion:'.json_encode($e->getMessage()) );
         } */
-
-        $this->context->smarty->assign([
-            'testVar1' => 'variable de prueba'
-        ]);
-
-        $fileV = __FILE__;
-
-        return $this->display(__FILE__, 'displayHeaderContent.tpl');
 
         //Configuration::get('myVariable'); // : retrieves a specific value from the database.
         //Configuration::getMultiple(array('myFirstVariable', 'mySecondVariable', 'myThirdVariable')); // : retrieves several values from the database, and returns a PHP array.
