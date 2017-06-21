@@ -140,8 +140,8 @@ class WebServiceHandle {
                     );
             $error  = $this->ordersService->getError();
             if($error){
-               $this->log->error('Error al hacer el pedido SAP: '. json_encode($error) );
-               return false;
+                $this->log->error('Error al hacer el pedido SAP: '. json_encode($error) );
+                return false;
             }
             $this->log->info("respuesta del pedido a SAP: ".json_encode($soapRes));
             return true;

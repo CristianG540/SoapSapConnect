@@ -157,9 +157,9 @@ class SoapSapConnect extends Module
             'testVar1' => 'variable de prueba'
         ]);
 
-        $this->log->warning('Foo');
-        $this->log->error('Bar');
-        $this->log->info('My logger is now ready', ["attr1"  => "La madre", "attr2"  => "ni herido"]);
+        //$this->log->warning('Foo');
+        //$this->log->error('Bar');
+        //$this->log->info('My logger is now ready', ["attr1"  => "La madre", "attr2"  => "ni herido"]);
 
         return $this->display(__FILE__, 'displayHeaderContent.tpl');
         // CODIGO DE PRUEBA USANDO LA LIBERIA SOAP NATIVA DE PHP
@@ -255,7 +255,7 @@ class SoapSapConnect extends Module
         $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
         $wsConnection->ordersService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/OrdersService.wsdl';
 
-        $wsConnection->login();
+        //$wsConnection->login();
 
         $wsConnection->order($orden);
 
