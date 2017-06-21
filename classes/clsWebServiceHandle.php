@@ -155,6 +155,7 @@ class WebServiceHandle {
             $error = $this->ordersService->getError();
             if($error || !isset($soapRes['DocumentParams']['DocEntry'])){
                 $this->log->error('Error al hacer el pedido SAP: '. json_encode($error) );
+                $this->log->error("respuesta del error pedido a SAP: ". json_encode($this->utf8ize($soapRes)) );
                 return false;
             }
             $this->log->info("respuesta del pedido a SAP: ". json_encode($this->utf8ize($soapRes)) );
