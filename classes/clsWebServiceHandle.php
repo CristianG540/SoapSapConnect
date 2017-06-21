@@ -2,7 +2,7 @@
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-//use Monolog\Handler\ChromePHPHandler;
+use Monolog\Handler\ChromePHPHandler;
 use Monolog\Handler\BrowserConsoleHandler;
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -53,7 +53,7 @@ class WebServiceHandle {
     function __construct() {
         $this->log = new Logger('ClaseConexionSap');
         $this->log->pushHandler(new StreamHandler(dirname(dirname(__FILE__)).'/logs/info.log', Logger::DEBUG));
-        //$this->log->pushHandler(new ChromePHPHandler());
+        $this->log->pushHandler(new ChromePHPHandler());
         $this->log->pushHandler(new BrowserConsoleHandler());
     }
 
