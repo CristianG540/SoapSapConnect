@@ -245,25 +245,30 @@ class SoapSapConnect extends Module
             'productos'      => $productos
         ];
 
-        $wsConnection = new WebServiceHandle();
-        $wsConnection->cliente = [
-            'codCliente' => $address->dni,
-            'nombre'     => $params['customer']->firstname,
-            'apellidos'  => $params['customer']->lastname,
-            'email'      => $params['customer']->email,
-        ];
-        $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
-        $wsConnection->ordersService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/OrdersService.wsdl';
+        try {
+            $wsConnection = new WebServiceHandle();
+            $wsConnection->cliente = [
+                'codCliente' => $address->dni,
+                'nombre'     => $params['customer']->firstname,
+                'apellidos'  => $params['customer']->lastname,
+                'email'      => $params['customer']->email,
+            ];
+            $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
+            $wsConnection->ordersService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/OrdersService.wsdl';
 
-        //$wsConnection->login();
+            //$wsConnection->login();
 
-        $wsConnection->order($orden);
+            $wsConnection->order($orden);
 
-        if( $wsConnection->logout() ){
-            $this->log->info('Se cerro la sesion correctamente en SAP.');
-        }else{
-            $this->log->error('No se pudo cerrar la sesion en SAP.');
+            if( $wsConnection->logout() ){
+                $this->log->info('Se cerro la sesion correctamente en SAP.');
+            }else{
+                $this->log->error('No se pudo cerrar la sesion en SAP.');
+            }
+        } catch (Exception $e) {
+            $this->log->error('Hubo un marica error en el catch.', $e);
         }
+
 
         /*
         $wsDataObj = new SoapSapDbUtils();
