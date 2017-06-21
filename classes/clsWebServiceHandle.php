@@ -47,7 +47,7 @@ class WebServiceHandle {
     ];
 
     /**
-     * Inicia la insancia de monolog
+     * Inicia la instancia de monolog
      */
     function __construct() {
         $this->log = new Logger('ClaseConexionSap');
@@ -96,7 +96,7 @@ class WebServiceHandle {
                $this->log->error('Error en el logout SAP: '. json_encode($error) );
                return false;
             }
-            $this->log->info("respuesta logout: ". json_encode($soapRes));
+            $this->log->info("respuesta logout: ". json_encode($this->utf8ize($soapRes) ));
             return true;
         }else{
             $this->log->error('Error en el logout SAP: '. json_encode($error) );
@@ -137,23 +137,50 @@ class WebServiceHandle {
                     . '</Add>'
                     );
 
+            /**
+             * Me trae la peticion en xml pulpo de lo que se envio por soap al sap
+             * algo asi como soap envelope bla, bla
+             */
             $this->log->info('Request orden es: '.$this->ordersService->request);
-            $this->log->info('Debug orden es: '.$this->ordersService->request);
-
+            /**
+             * Lo mismo que el anterior, pero en vez de traer la peticion, trae la respuesta
+             */
+            $this->log->info('Response orden es: '.$this->ordersService->response);
+            /**
+             * Me devuelve el string con todo el debug de todos los procesos que ha hecho nusoap
+             * para activarlo hay q setear el nivel de debug a mas de 0 ejemplo: "$this->ordersService->setDebugLevel(9);"
+             */
+            $this->log->info('Debug orden es: '.$this->ordersService->debug_str);
 
             $error = $this->ordersService->getError();
             if($error){
                 $this->log->error('Error al hacer el pedido SAP: '. json_encode($error) );
                 return false;
             }
-            $this->log->info("respuesta del pedido a SAP: ".json_encode($soapRes));
+            $this->log->info("respuesta del pedido a SAP: ". json_encode($this->utf8ize($soapRes)) );
             return true;
         }else{
             $this->log->error('Error al procesar la orden SAP: '. json_encode($error) );
             return false;
         }
     }
-
+    /**
+     * solve JSON_ERROR_UTF8 error in php json_encode
+     * esta funcionsita me corrije un error que habia al tratar de hacerle json encode aun array con tildes
+     * en algunos textos
+     * @param  array $mixed El erray que se decia corregir
+     * @return array        Regresa el mismo array pero corrigiendo errores en la codificacion
+     */
+    public function utf8ize($mixed) {
+        if (is_array($mixed)) {
+            foreach ($mixed as $key => $value) {
+                $mixed[$key] = $this->utf8ize($value);
+            }
+        } else if (is_string ($mixed)) {
+            return utf8_encode($mixed);
+        }
+        return $mixed;
+    }
 
     public function __get($property)
     {
@@ -175,9 +202,11 @@ class WebServiceHandle {
         {
             case 'loginService':
                 $this->loginService = new nusoap_client($value, true);
+                $this->loginService->setDebugLevel(0);
                 break;
             case 'ordersService':
                 $this->ordersService = new nusoap_client($value, true);
+                $this->ordersService->setDebugLevel(0);
                 break;
             case 'cliente':
                 $this->cliente = $value;

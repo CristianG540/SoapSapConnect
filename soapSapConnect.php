@@ -254,17 +254,22 @@ class SoapSapConnect extends Module
             $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
             $wsConnection->ordersService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/OrdersService.wsdl';
 
-            $wsConnection->login();
+
+            if( $wsConnection->login() ){
+                $this->log->info('***************************Se abrio correctamente la sesion SAP**************************************');
+            }else{
+                $this->log->error('No se pudo cerrar la sesion en SAP.');
+            }
 
             $wsConnection->order($orden);
 
             if( $wsConnection->logout() ){
-                $this->log->info('Se cerro la sesion correctamente en SAP.');
+                $this->log->info('****************************Se cerro la sesion correctamente en SAP***********************************');
             }else{
                 $this->log->error('No se pudo cerrar la sesion en SAP.');
             }
         } catch (Exception $e) {
-            $this->log->error('Hubo un marica error en el catch.', $e);
+            $this->log->error('Hubo un error en el catch de las conexiones al sap.', $e);
         }
 
 
