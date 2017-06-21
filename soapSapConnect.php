@@ -253,6 +253,8 @@ class SoapSapConnect extends Module
         $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
         $wsConnection->ordersService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/OrdersService.wsdl';
 
+        $wsConnection->login();
+
         $wsConnection->order($orden);
 
         if( $wsConnection->logout() ){
