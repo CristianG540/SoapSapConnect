@@ -5,6 +5,7 @@ class SoapSapDbUtils extends ObjectModel {
     public $sessionId;
     public $codCliente;
     public $created_at;
+    public $numOrden;
 
     /**
      * @see   ObjectModel::$definition
@@ -23,6 +24,10 @@ class SoapSapDbUtils extends ObjectModel {
                 'required' => true
             ],
             'created_at' => [
+                'type' => self::TYPE_STRING,
+                'required' => false
+            ],
+            'numOrden' => [
                 'type' => self::TYPE_STRING,
                 'required' => false
             ]
