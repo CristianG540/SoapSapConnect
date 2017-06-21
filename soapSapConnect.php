@@ -267,6 +267,7 @@ class SoapSapConnect extends Module
 
             $numOrden = $wsConnection->order($orden);
             if( $numOrden ){
+                $wsDataObj->created_at = date("Y-m-d H:i:s");
                 $wsData = $wsDataObj->add();
                 if( !wsData ){
                     $this->log->error('fallo al crear el reg en BD', $wsData );
