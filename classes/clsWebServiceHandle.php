@@ -53,8 +53,8 @@ class WebServiceHandle {
     function __construct() {
         $this->log = new Logger('ClaseConexionSap');
         $this->log->pushHandler(new StreamHandler(dirname(dirname(__FILE__)).'/logs/info.log', Logger::DEBUG));
-        $this->log->pushHandler(new ChromePHPHandler());
-        $this->log->pushHandler(new BrowserConsoleHandler());
+        //$this->log->pushHandler(new ChromePHPHandler());
+        //$this->log->pushHandler(new BrowserConsoleHandler());
     }
 
     public function login() {

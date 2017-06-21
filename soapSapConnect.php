@@ -66,8 +66,8 @@ class SoapSapConnect extends Module
         // create a log channel
         $this->log = new Logger('SoapSapConnect');
         $this->log->pushHandler(new StreamHandler($this->local_path.'/logs/info.log', Logger::DEBUG));
-        $this->log->pushHandler(new ChromePHPHandler());
-        $this->log->pushHandler(new BrowserConsoleHandler());
+        //$this->log->pushHandler(new ChromePHPHandler());
+        //$this->log->pushHandler(new BrowserConsoleHandler());
     }
 
     /**
