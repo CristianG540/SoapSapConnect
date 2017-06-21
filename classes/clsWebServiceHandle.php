@@ -136,7 +136,11 @@ class WebServiceHandle {
                         . '</Document>'
                     . '</Add>'
                     );
-            $this->log->info('La peticion de orden es: '.htmlspecialchars($soapRes->request, ENT_QUOTES));
+
+            $this->log->info('Request orden es: '.htmlspecialchars($soapRes->request, ENT_QUOTES));
+            $this->log->info('Debug orden es: '.htmlspecialchars($soapRes->request, ENT_QUOTES));
+
+
             $error  = $this->ordersService->getError();
             if($error){
                 $this->log->error('Error al hacer el pedido SAP: '. json_encode($error) );
