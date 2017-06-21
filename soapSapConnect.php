@@ -157,6 +157,10 @@ class SoapSapConnect extends Module
             'testVar1' => 'variable de prueba'
         ]);
 
+        $this->log->warning('Foo');
+        $this->log->error('Bar');
+        $this->log->info('My logger is now ready', ["attr1"  => "La madre", "attr2"  => "ni herido"]);
+
         return $this->display(__FILE__, 'displayHeaderContent.tpl');
         // CODIGO DE PRUEBA USANDO LA LIBERIA SOAP NATIVA DE PHP
         /*
@@ -197,9 +201,7 @@ class SoapSapConnect extends Module
         //Configuration::updateValue('myVariable', $value); // : updates an existing database variable with a new value. If the variable does not yet exist, it creates it with that value.
         //Configuration::deleteByName('myVariable'); // : deletes the database variable.
         //
-        //$this->log->warning('Foo');
-        //$this->log->error('Bar');
-        //$this->log->info('My logger is now ready', ["attr1"  => "La madre", "attr2"  => "ni herido"]);
+
     }
 
     public function hookActionCustomerAccountAdd($params){
