@@ -30,8 +30,7 @@ require_once('classes/clsWebServiceHandle.php');
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Monolog\Handler\ChromePHPHandler;
-//use Monolog\Handler\BrowserConsoleHandler;
+use Monolog\Handler\BrowserConsoleHandler;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -66,8 +65,7 @@ class SoapSapConnect extends Module
         // create a log channel
         $this->log = new Logger('SoapSapConnect');
         $this->log->pushHandler(new StreamHandler($this->local_path.'/logs/info.log', Logger::DEBUG));
-        $this->log->pushHandler(new ChromePHPHandler());
-        //$this->log->pushHandler(new BrowserConsoleHandler());
+        $this->log->pushHandler(new BrowserConsoleHandler());
     }
 
     /**
