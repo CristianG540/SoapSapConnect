@@ -93,6 +93,7 @@ class SoapSapConnect extends Module
                 `codCliente` VARCHAR(200) NOT NULL COMMENT 'La cedula del usario cliente que hace la compra' ,
                 `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de creacion, mas o menos el momento en que se logea en sap' ,
                 `numOrden` varchar(100) DEFAULT NULL COMMENT 'Numero de la orden en sap',
+                `numOrdenPS` varchar(100) DEFAULT NULL COMMENT 'Numero de la orden en PRESTASHOP',
                 PRIMARY KEY (`id`)
             ) ENGINE = InnoDB;
         ");
@@ -268,9 +269,12 @@ class SoapSapConnect extends Module
 
             $numOrden = $wsConnection->order($orden);
             if( $numOrden ){
+
                 $wsDataObj->created_at = date("Y-m-d H:i:s");
                 $wsDataObj->numOrden = $numOrden;
+                $wsDataObj->numOrdenPS = $params['order']->id;
                 $wsData = $wsDataObj->add();
+
                 if( !wsData ){
                     $this->log->error('fallo al crear el reg en BD', $wsData );
                 }
