@@ -2,8 +2,8 @@
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Monolog\Handler\ChromePHPHandler;
-use Monolog\Handler\BrowserConsoleHandler;
+//use Monolog\Handler\ChromePHPHandler;
+//use Monolog\Handler\BrowserConsoleHandler;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates

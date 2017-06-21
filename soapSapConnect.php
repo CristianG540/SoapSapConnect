@@ -30,8 +30,8 @@ require_once('classes/clsWebServiceHandle.php');
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Monolog\Handler\ChromePHPHandler;
-use Monolog\Handler\BrowserConsoleHandler;
+//use Monolog\Handler\ChromePHPHandler;
+//use Monolog\Handler\BrowserConsoleHandler;
 
 if (!defined('_PS_VERSION_')) {
     exit;
