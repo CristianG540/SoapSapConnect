@@ -137,8 +137,8 @@ class WebServiceHandle {
                     . '</Add>'
                     );
 
-            $this->log->info('Request orden es: '.htmlspecialchars($this->ordersService->request, ENT_QUOTES));
-            $this->log->info('Debug orden es: '.htmlspecialchars($this->ordersService->request, ENT_QUOTES));
+            $this->log->info('Request orden es: '.$this->ordersService->request);
+            $this->log->info('Debug orden es: '.$this->ordersService->request);
 
 
             $error = $this->ordersService->getError();
