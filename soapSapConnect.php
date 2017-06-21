@@ -155,7 +155,7 @@ class SoapSapConnect extends Module
 
         $this->context->smarty->assign([
             'testVar1' => 'variable de prueba'
-
+        ]);
 
         return $this->display(__FILE__, 'displayHeaderContent.tpl');
         // CODIGO DE PRUEBA USANDO LA LIBERIA SOAP NATIVA DE PHP
