@@ -120,7 +120,7 @@ class WebServiceHandle {
             return $carry;
         }, '');
 
-        $error  = $this->ordersService->getError();
+        $error = $this->ordersService->getError();
         if(!$error){
             $soapRes = $this->ordersService->call('Add', ''
                     . '<Add>'
@@ -137,11 +137,11 @@ class WebServiceHandle {
                     . '</Add>'
                     );
 
-            $this->log->info('Request orden es: '.htmlspecialchars($soapRes->request, ENT_QUOTES));
-            $this->log->info('Debug orden es: '.htmlspecialchars($soapRes->request, ENT_QUOTES));
+            $this->log->info('Request orden es: '.htmlspecialchars($this->ordersService->request, ENT_QUOTES));
+            $this->log->info('Debug orden es: '.htmlspecialchars($this->ordersService->request, ENT_QUOTES));
 
 
-            $error  = $this->ordersService->getError();
+            $error = $this->ordersService->getError();
             if($error){
                 $this->log->error('Error al hacer el pedido SAP: '. json_encode($error) );
                 return false;
