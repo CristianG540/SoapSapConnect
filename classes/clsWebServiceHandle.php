@@ -151,9 +151,9 @@ class WebServiceHandle {
              * para activarlo hay q setear el nivel de debug a mas de 0 ejemplo: "$this->ordersService->setDebugLevel(9);"
              */
             $this->log->info('Debug orden es: '.$this->ordersService->debug_str);
-
+            // Verifico que no haya ningun error
             $error = $this->ordersService->getError();
-            if($error){
+            if($error || !isset($soapRes['DocumentParams']['DocEntry'])){
                 $this->log->error('Error al hacer el pedido SAP: '. json_encode($error) );
                 return false;
             }

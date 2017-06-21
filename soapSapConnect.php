@@ -258,7 +258,7 @@ class SoapSapConnect extends Module
             if( $wsConnection->login() ){
                 $this->log->info('***************************Se abrio correctamente la sesion SAP**************************************');
             }else{
-                $this->log->error('No se pudo cerrar la sesion en SAP.');
+                $this->log->error('***************************No se pudo iniciar la sesion en SAP.**************************************');
             }
 
             $wsConnection->order($orden);
@@ -266,7 +266,7 @@ class SoapSapConnect extends Module
             if( $wsConnection->logout() ){
                 $this->log->info('****************************Se cerro la sesion correctamente en SAP***********************************');
             }else{
-                $this->log->error('No se pudo cerrar la sesion en SAP.');
+                $this->log->error('***************************No se pudo cerrar la sesion en SAP*****************************************');
             }
         } catch (Exception $e) {
             $this->log->error('Hubo un error en el catch de las conexiones al sap.', $e);
