@@ -246,6 +246,10 @@ class SoapSapConnect extends Module
         ];
 
         try {
+            /**
+             * Esta es la instancia de la clase con la que guardo los datos en la bd
+             * @var SoapSapDbUtils
+             */
             $wsDataObj = new SoapSapDbUtils();
 
             $wsConnection = new WebServiceHandle();
@@ -269,12 +273,10 @@ class SoapSapConnect extends Module
 
             $numOrden = $wsConnection->order($orden);
             if( $numOrden ){
-
                 $wsDataObj->created_at = date("Y-m-d H:i:s");
                 $wsDataObj->numOrden = $numOrden;
                 $wsDataObj->numOrdenPS = $params['order']->id;
                 $wsData = $wsDataObj->add();
-
                 if( !wsData ){
                     $this->log->error('fallo al crear el reg en BD', $wsData );
                 }
@@ -289,19 +291,6 @@ class SoapSapConnect extends Module
         } catch (Exception $e) {
             $this->log->error('Hubo un error en el catch de las conexiones al sap.', $e);
         }
-
-
-        /*
-        $wsDataObj = new SoapSapDbUtils();
-        $wsDataObj->sessionId = 'test';
-        $wsDataObj->codCliente = 'test';
-        $wsData = $wsDataObj->add();
-        if($wsData){
-            $this->log->info('Se creo correctamente el reg en BD', $wsData );
-        }else{
-            $this->log->erros('fallo al crear el reg en BD', $wsData );
-        }
-        */
 
         return true;
     }
