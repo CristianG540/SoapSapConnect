@@ -12,7 +12,7 @@ class SoapSapDbUtils extends ObjectModel {
      * @see   ObjectModel::$definition
      */
     public static $definition = [
-        'table'     => "soapSapConnect_order",
+        'table'     => "soapsapconnect_order",
         'primary'   => "id",
         'multilang' => false,
         'fields'    => [
