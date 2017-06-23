@@ -81,6 +81,7 @@ class SoapSapConnect extends Module
             $this->registerHook('actionPaymentConfirmation') &&
             $this->registerHook('actionValidateOrder') &&
             $this->registerHook('actionOrderStatusUpdate') &&
+            $this->registerHook('actionCustomerAccountAdd') &&
             $this->installDB();
     }
 
@@ -204,10 +205,6 @@ class SoapSapConnect extends Module
 
     }
 
-    public function hookActionCustomerAccountAdd($params){
-        $this->log->warning('Se lanzo el hook ActionCustomerAccountAdd revisar: '.json_encode($params));
-    }
-
     public function hookActionPaymentConfirmation($params) {
         $this->log->warning('Se lanzo el hook de ActionPaymentConfirmation revisar: '.json_encode($params));
         return true;
@@ -231,7 +228,7 @@ class SoapSapConnect extends Module
      */
     public function hookActionValidateOrder($params) {
 
-        $this->log->info('hookActionValidateOrder ', $params );
+        $this->log->info('hookActionValidateOrder '. json_encode($params) );
         $address = new Address(intval($params['cart']->id_address_delivery));
         $productos = array_map(function ($val){
             return [
@@ -282,7 +279,6 @@ class SoapSapConnect extends Module
                 }
             }
 
-
             if( $wsConnection->logout() ){
                 $this->log->info('****************************Se cerro la sesion correctamente en SAP***********************************');
             }else{
@@ -292,6 +288,11 @@ class SoapSapConnect extends Module
             $this->log->error('Hubo un error en el catch de las conexiones al sap.', $e);
         }
 
+        return true;
+    }
+
+    public function hookActionCustomerAccountAdd($params, $p2, $p3, $p4, $p5, $p6){
+        $this->log->warning('Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($params));
         return true;
     }
 
