@@ -128,7 +128,7 @@ class WebServiceHandle {
         $id = ($sessionId) ? $sessionId : $this->sessionId;
 
         /**
-         * Este metodo del webservice pide unos headers entonces los agrego
+         * El metodo "Add" del webservice pide unos headers entonces los agrego
          */
         $paramsH = [
             'SessionID'   => $id,
@@ -186,9 +186,11 @@ class WebServiceHandle {
             // Verifico que no haya ningun error, tambien reviso si existe exactamente la ruta del array que especifico
             // si esa rut ano existe significa que algo raro paso muy posiblemente un error
             $error = $this->ordersService->getError();
+            $fault = $this->ordersService->fault;
             if($error || !isset($soapRes['DocumentParams']['DocEntry'])){
                 $this->log->error('Error al hacer el pedido SAP: '. json_encode($error) );
                 $this->log->error("respuesta del error pedido a SAP: ". json_encode($this->utf8ize($soapRes)) );
+                $this->log->error("respuesta del Fault pedido a SAP: ". json_encode($this->utf8ize($fault))."******" );
                 return false;
             }
             $this->log->info("respuesta del pedido a SAP: ". json_encode($this->utf8ize($soapRes)) );
