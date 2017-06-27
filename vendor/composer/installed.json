@@ -166,37 +166,5 @@
             "logging",
             "psr-3"
         ]
-    },
-    {
-        "name": "jwbrownie/payu-latam-php-sdk",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/JWBrownie/payu-latam-php-sdk.git",
-            "reference": "fa6b8534cf0c2e72f5a193ef1ddafb82b9b00e09"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/JWBrownie/payu-latam-php-sdk/zipball/fa6b8534cf0c2e72f5a193ef1ddafb82b9b00e09",
-            "reference": "fa6b8534cf0c2e72f5a193ef1ddafb82b9b00e09",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.6.4"
-        },
-        "time": "2017-03-06T21:50:05+00:00",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "PayU\\": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "Brings to availability on composer to users that needs to require through it"
     }
 ]

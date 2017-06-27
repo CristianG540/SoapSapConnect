@@ -6,5 +6,4 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'PayU\\' => array($vendorDir . '/jwbrownie/payu-latam-php-sdk/lib'),
 );

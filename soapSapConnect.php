@@ -25,6 +25,7 @@
 */
 
 require_once('vendor/autoload.php');
+require_once('libs_externas/PayU456/lib/PayU.php');
 require_once('classes/clsSoapSapDbUtils.php');
 require_once('classes/clsWebServiceHandle.php');
 
@@ -153,6 +154,26 @@ class SoapSapConnect extends Module
     }
 
     public function hookDisplayNav($params){
+
+        PayU::$apiKey = "4Vj8eK4rloUd272L48hsrarnUA";
+        PayU::$apiLogin = "pRRXKOl8ikMmt9u";
+        PayU::$merchantId = "508029";
+        PayU::$language = SupportedLanguages::ES;
+        PayU::$isTest = true;
+
+        Environment::setPaymentsCustomUrl("https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi");
+        Environment::setReportsCustomUrl("https://sandbox.api.payulatam.com/reports-api/4.0/service.cgi");
+        Environment::setSubscriptionsCustomUrl("https://sandbox.api.payulatam.com/payments-api/rest/v4.3/");
+
+        $response = PayUReports::doPing();
+        $varPing = $response->code;
+
+        /*
+         * Urls de produccion imagino
+        \PayU\Api\Environment::setPaymentsCustomUrl("https://api.payulatam.com/payments-api/4.0/service.cgi");
+        \PayU\Api\Environment::setReportsCustomUrl("https://api.payulatam.com/reports-api/4.0/service.cgi");
+        \PayU\Api\Environment::setSubscriptionsCustomUrl("https://api.payulatam.com/payments-api/rest/v4.3/");
+        */
 
         $this->context->smarty->assign([
             'testVar1' => 'variable de prueba'

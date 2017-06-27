@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3f3e2613ee22a2d4ab1756056e1d2d86",
+    "content-hash": "dcb7d0703d688b0e76bd13226e0332b4",
     "packages": [
         {
             "name": "fergusean/nusoap",
@@ -42,36 +42,6 @@
             ],
             "description": "NuSOAP re-packaged for Packagist/Composer",
             "time": "2014-05-19T03:44:33+00:00"
-        },
-        {
-            "name": "jwbrownie/payu-latam-php-sdk",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/JWBrownie/payu-latam-php-sdk.git",
-                "reference": "fa6b8534cf0c2e72f5a193ef1ddafb82b9b00e09"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/JWBrownie/payu-latam-php-sdk/zipball/fa6b8534cf0c2e72f5a193ef1ddafb82b9b00e09",
-                "reference": "fa6b8534cf0c2e72f5a193ef1ddafb82b9b00e09",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.6.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "PayU\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Brings to availability on composer to users that needs to require through it",
-            "time": "2017-03-06 21:50:05"
         },
         {
             "name": "monolog/monolog",
@@ -202,9 +172,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "jwbrownie/payu-latam-php-sdk": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

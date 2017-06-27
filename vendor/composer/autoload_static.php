@@ -28,16 +28,6 @@ class ComposerStaticInite90327bd9aa5da1d5166cf6f482eb1fd
         ),
     );
 
-    public static $prefixesPsr0 = array (
-        'P' =>
-        array (
-            'PayU\\' =>
-            array (
-                0 => __DIR__ . '/..' . '/jwbrownie/payu-latam-php-sdk/lib',
-            ),
-        ),
-    );
-
     public static $classMap = array (
         'XMLSchema' => __DIR__ . '/..' . '/fergusean/nusoap/lib/class.xmlschema.php',
         'nusoap_base' => __DIR__ . '/..' . '/fergusean/nusoap/lib/class.nusoap_base.php',
@@ -66,7 +56,6 @@ class ComposerStaticInite90327bd9aa5da1d5166cf6f482eb1fd
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInite90327bd9aa5da1d5166cf6f482eb1fd::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInite90327bd9aa5da1d5166cf6f482eb1fd::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInite90327bd9aa5da1d5166cf6f482eb1fd::$prefixesPsr0;
             $loader->classMap = ComposerStaticInite90327bd9aa5da1d5166cf6f482eb1fd::$classMap;
 
         }, null, ClassLoader::class);
