@@ -231,14 +231,19 @@ class SoapSapConnect extends Module
         $this->log->info('hookActionValidateOrder '. json_encode($params) );
         // Asi saco los datos de la direccion con la que se hizo la orden, lo comento por que por le momento no es necesario
         // $address = new Address(intval($params['cart']->id_address_delivery));
+
+        // el array map funciona parecido al _.map de underscore
         $productos = array_map(function ($val){
             return [
                 'referencia' => $val['reference'],
                 'cantidad'   => $val['cart_quantity']
             ];
         }, $params['order']->product_list);
+
+        // Datos basico del pedido
         $orden = [
             'id'             => $params['order']->id,
+            'reference'      => $params['order']->reference, // La referencia de la orden, esto lo asigna el prestashp para identificar el pedido
             'fecha_creacion' => $params['order']->date_add,
             'productos'      => $productos
         ];

@@ -12,7 +12,8 @@
     ],
     "require": {
         "monolog/monolog": "1.*",
-        "fergusean/nusoap": "*"
+        "fergusean/nusoap": "*",
+        "jwbrownie/payu-latam-php-sdk": "dev-master"
     }
 
 }
