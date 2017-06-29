@@ -25,7 +25,6 @@
 */
 
 require_once('vendor/autoload.php');
-require_once('libs_externas/PayU456/lib/PayU.php');
 require_once('classes/clsSoapSapDbUtils.php');
 require_once('classes/clsWebServiceHandle.php');
 
@@ -154,23 +153,6 @@ class SoapSapConnect extends Module
     }
 
     public function hookDisplayNav($params){
-
-        PayU::$apiKey = "Yu5SQsQg1sF23W9eFA37dQoeEC";
-        PayU::$apiLogin = "k4gby84ATL7pj7q";
-        PayU::$merchantId = "658547";
-        PayU::$language = SupportedLanguages::ES;
-        PayU::$isTest = true;
-
-        /*
-         * Urls de produccion imagino
-         *
-         */
-        Environment::setPaymentsCustomUrl("https://api.payulatam.com/payments-api/4.0/service.cgi");
-        Environment::setReportsCustomUrl("https://api.payulatam.com/reports-api/4.0/service.cgi");
-        Environment::setSubscriptionsCustomUrl("https://api.payulatam.com/payments-api/rest/v4.3/");
-
-        $response = PayUReports::doPing();
-        $varPing = $response->code;
 
         $this->context->smarty->assign([
             'testVar1' => 'variable de prueba'
