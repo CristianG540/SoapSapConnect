@@ -162,7 +162,7 @@ class SoapSapConnect extends Module
         //$this->log->error('Bar');
         //$this->log->info('My logger is now ready', ["attr1"  => "La madre", "attr2"  => "ni herido"]);
 
-        return $this->display(__FILE__, 'displayHeaderContent.tpl');
+        /*return $this->display(__FILE__, 'displayHeaderContent.tpl');*/
         // CODIGO DE PRUEBA USANDO LA LIBERIA SOAP NATIVA DE PHP
         /*
         // Create a new client object using a WSDL URL
