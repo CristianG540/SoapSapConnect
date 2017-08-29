@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-require_once('vendor/autoload.php');
+require __DIR__.'/vendor/autoload.php';
 require_once('classes/clsSoapSapDbUtils.php');
 require_once('classes/clsWebServiceHandle.php');
 
