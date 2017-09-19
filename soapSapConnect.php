@@ -220,7 +220,7 @@ class SoapSapConnect extends Module
 
             $data = Db::getInstance()->executeS($query);
 
-            $this->log->info('-hookActionPaymentConfirmation Datos consulta cliente'. json_encode($params) );
+            $this->log->info('-hookActionPaymentConfirmation Datos consulta cliente'. json_encode($data) );
 
 
         } catch (Exception $e) {
