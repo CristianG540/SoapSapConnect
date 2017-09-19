@@ -220,11 +220,10 @@ class SoapSapConnect extends Module
 
             $data = Db::getInstance()->executeS($query);
 
-            $order=new Order(61);
-            $products=$order->getProducts(true);
+            $products=$params['cart']->getProducts(true);
 
             $ProductDetailObject = new OrderDetail;
-            $product_detail = $ProductDetailObject->getList(61);
+            $product_detail = $ProductDetailObject->getList($params['id_order']);
 
             $this->log->info('-Datos consulta cliente: '. json_encode($data) );
 
