@@ -211,6 +211,20 @@ class SoapSapConnect extends Module
         $this->log->warning('Se lanzo el hook de ActionPaymentConfirmation revisar: '.json_encode($params));
         try {
 
+            // Asi saco los datos de la direccion con la que se hizo la orden, lo comento por que por le momento no es necesario
+            // $address = new Address(intval($params['cart']->id_address_delivery));
+
+            // el array map funciona parecido al _.map de underscore
+            $productos = array_map(function ($val){
+                return [
+                    'referencia' => $val['reference'],
+                    'cantidad'   => $val['quantity']
+                ];
+            }, $params['cart']->getProducts(true) );
+
+            $order = new OrderCore($params['id_order']);
+            $dOrder = $order->getFields();
+
             $query = new DbQuery();
             $query
                 ->select('*')
@@ -220,16 +234,14 @@ class SoapSapConnect extends Module
 
             $data = Db::getInstance()->executeS($query);
 
-            $products=$params['cart']->getProducts(true);
-
             $ProductDetailObject = new OrderDetail;
             $product_detail = $ProductDetailObject->getList($params['id_order']);
 
             $this->log->info('-Datos consulta cliente: '. json_encode($data) );
 
-            $this->log->info('-Order->getProducts: '. json_encode($products) );
+            $this->log->info('-productos: '. json_encode($productos) );
 
-            $this->log->info('-ProductDetailObject->getList: '. json_encode($product_detail) );
+            $this->log->info('-Order: '. json_encode($dOrder) );
 
         } catch (Exception $e) {
             $this->log->error('Hubo un error al tratar de ahcer la cinsylta del cliente.', $e);
