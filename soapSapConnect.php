@@ -210,6 +210,11 @@ class SoapSapConnect extends Module
 
         $this->log->warning('Se lanzo el hook de ActionPaymentConfirmation revisar: '.json_encode($params));
         try {
+            /**
+             * Recupero los datos de la orden por el id
+             */
+            $order = new OrderCore($params['id_order']);
+            $dOrder = $order->getFields();
 
             // Asi saco los datos de la direccion con la que se hizo la orden, lo comento por que por le momento no es necesario
             // $address = new Address(intval($params['cart']->id_address_delivery));
@@ -222,22 +227,102 @@ class SoapSapConnect extends Module
                 ];
             }, $params['cart']->getProducts(true) );
 
-            $order = new OrderCore($params['id_order']);
-            $dOrder = $order->getFields();
+            // Datos basico del pedido
+            $orden = [
+                'id'             => $dOrder['id_order'],
+                'reference'      => $dOrder['reference'], // La referencia de la orden, esto lo asigna el prestashp para identificar el pedido
+                'fecha_creacion' => $dOrder['date_add'],
+                'productos'      => $productos
+            ];
 
+            /**
+             * Con la clase DbQuery hago una consulta a la bd y traigo los datos
+             * del cliente por id, el id del cliente lo saque de la orden que
+             * consulte previamente para mas info mirar aqui:
+             * http://doc.prestashop.com/display/PS15/Diving+into+PrestaShop+Core+development#DivingintoPrestaShopCoredevelopment-TheDBQueryclass
+             */
             $query = new DbQuery();
             $query
                 ->select('*')
                 ->from('customer')
-                ->where('`id_customer` = 13')
+                ->where('`id_customer` = '.$dOrder['id_customer'])
                 ->orderBy('`id_customer` ASC');
+            $dCustomer = Db::getInstance()->executeS($query);
 
-            $data = Db::getInstance()->executeS($query);
+            /**
+             * Esta es la instancia de la clase con la que guardo los datos en la bd
+             * @var SoapSapDbUtils
+             */
+            $wsDataObj = new SoapSapDbUtils();
 
-            $ProductDetailObject = new OrderDetail;
-            $product_detail = $ProductDetailObject->getList($params['id_order']);
+            /**
+             * Instancia de la clase con la que manejo las conexiones al webservice
+             */
+            $wsConnection = new WebServiceHandle();
+            /**
+             * Seteo los datos basicos del cliente
+             */
+            $wsConnection->cliente = [
+                'codCliente' => $dCustomer[0]['cedula'],
+                'nombre'     => $dCustomer[0]['firstname'],
+                'apellidos'  => $dCustomer[0]['lastname'],
+                'email'      => $dCustomer[0]['email']
+            ];
 
-            $this->log->info('-Datos consulta cliente: '. json_encode($data) );
+
+            /**
+             * defino las urls de los wsdl de los servicios del webservice
+             */
+            $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
+            $wsConnection->ordersService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/OrdersService.wsdl';
+
+
+            /**
+             * Me conecto al webservice y verifico si hay error o no
+             */
+            if( $wsConnection->login() ){
+                $this->log->info('***************************Se abrio correctamente la sesion SAP**************************************');
+                $wsDataObj->sessionId = $wsConnection->sessionId;
+                /**
+                 * Seteo la cedula en la instancia del active record para mas
+                 * adelante guardarlo en la base de datos
+                 */
+                $wsDataObj->codCliente = $dCustomer[0]['cedula'];
+            }else{
+                $this->log->error('***************************No se pudo iniciar la sesion en SAP.**************************************');
+            }
+            /**
+             * Llamo el metodo que me envia la orden al webservice y verifico que no haya error
+             */
+            $numOrden = $wsConnection->order($orden);
+            if( $numOrden ){
+                /**
+                 * Guardo el resto de datos en la instancia del active record (orm)
+                 */
+                $wsDataObj->created_at = date("Y-m-d H:i:s");
+                $wsDataObj->numOrden = $numOrden;
+                $wsDataObj->numOrdenPS = $dOrder['id_order'];
+            }
+
+            /**
+             * Llamo al metodo de deslogueo del webservice que me cierra la sesion en sap
+             * y verifico que no hayan errores
+             */
+            if( $wsConnection->logout() ){
+                /**
+                 * ejecuto el metodo del active record que me guarda el objeto en la bd
+                 * si hay algun error guardo la info en un log
+                 */
+                $wsData = $wsDataObj->add();
+                if( !wsData ){
+                    $this->log->error('fallo al crear el reg en BD', $wsData );
+                }
+                $this->log->info('****************************Se cerro la sesion correctamente en SAP***********************************');
+            }else{
+                $this->log->error('***************************No se pudo cerrar la sesion en SAP*****************************************');
+            }
+
+            $this->log->info('-Datos consulta cliente: '. json_encode($dCustomer[0]) );
 
             $this->log->info('-productos: '. json_encode($productos) );
 
@@ -268,105 +353,105 @@ class SoapSapConnect extends Module
      *                             'orderStatus' => (object) OrderState object
      *                          ];
      */
-    public function hookActionValidateOrder($params) {
-
-        $this->log->info('hookActionValidateOrder '. json_encode($params) );
-        // Asi saco los datos de la direccion con la que se hizo la orden, lo comento por que por le momento no es necesario
-        // $address = new Address(intval($params['cart']->id_address_delivery));
-
-        // el array map funciona parecido al _.map de underscore
-        $productos = array_map(function ($val){
-            return [
-                'referencia' => $val['reference'],
-                'cantidad'   => $val['cart_quantity']
-            ];
-        }, $params['order']->product_list);
-
-        // Datos basico del pedido
-        $orden = [
-            'id'             => $params['order']->id,
-            'reference'      => $params['order']->reference, // La referencia de la orden, esto lo asigna el prestashp para identificar el pedido
-            'fecha_creacion' => $params['order']->date_add,
-            'productos'      => $productos
-        ];
-
-        try {
-            /**
-             * Esta es la instancia de la clase con la que guardo los datos en la bd
-             * @var SoapSapDbUtils
-             */
-            $wsDataObj = new SoapSapDbUtils();
-
-            /**
-             * Instancia de la clase con la que manejo las conexiones al webservice
-             */
-            $wsConnection = new WebServiceHandle();
-            /**
-             * Seteo los datos basicos del cliente
-             */
-            $wsConnection->cliente = [
-                'codCliente' => $params['customer']->cedula,
-                'nombre'     => $params['customer']->firstname,
-                'apellidos'  => $params['customer']->lastname,
-                'email'      => $params['customer']->email,
-            ];
-            /**
-             * defino las urls de los wsdl de los servicios del webservice
-             */
-            $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
-            $wsConnection->ordersService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/OrdersService.wsdl';
-
-
-            /**
-             * Me conecto al webservice y verifico si hay error o no
-             */
-            if( $wsConnection->login() ){
-                $this->log->info('***************************Se abrio correctamente la sesion SAP**************************************');
-                $wsDataObj->sessionId = $wsConnection->sessionId;
-                /**
-                 * Seteo la cedula en la instancia del active record para mas
-                 * adelante guardarlo en la base de datos
-                 */
-                $wsDataObj->codCliente = $params['customer']->cedula;
-            }else{
-                $this->log->error('***************************No se pudo iniciar la sesion en SAP.**************************************');
-            }
-            /**
-             * Llamo el metodo que me envia la orden al webservice y verifico que no haya error
-             */
-            $numOrden = $wsConnection->order($orden);
-            if( $numOrden ){
-                /**
-                 * Guardo el resto de datos en la instancia del active record (orm)
-                 */
-                $wsDataObj->created_at = date("Y-m-d H:i:s");
-                $wsDataObj->numOrden = $numOrden;
-                $wsDataObj->numOrdenPS = $params['order']->id;
-            }
-
-            /**
-             * Llamo al metodo de deslogueo del webservice que me cierra la sesion en sap
-             * y verifico que no hayan errores
-             */
-            if( $wsConnection->logout() ){
-                /**
-                 * ejecuto el metodo del active record que me guarda el objeto en la bd
-                 * si hay algun error guardo la info en un log
-                 */
-                $wsData = $wsDataObj->add();
-                if( !wsData ){
-                    $this->log->error('fallo al crear el reg en BD', $wsData );
-                }
-                $this->log->info('****************************Se cerro la sesion correctamente en SAP***********************************');
-            }else{
-                $this->log->error('***************************No se pudo cerrar la sesion en SAP*****************************************');
-            }
-        } catch (Exception $e) {
-            $this->log->error('Hubo un error en el catch de las conexiones al sap.', $e);
-        }
-
-        return true;
-    }
+//    public function hookActionValidateOrder($params) {
+//
+//        $this->log->info('hookActionValidateOrder '. json_encode($params) );
+//        // Asi saco los datos de la direccion con la que se hizo la orden, lo comento por que por le momento no es necesario
+//        // $address = new Address(intval($params['cart']->id_address_delivery));
+//
+//        // el array map funciona parecido al _.map de underscore
+//        $productos = array_map(function ($val){
+//            return [
+//                'referencia' => $val['reference'],
+//                'cantidad'   => $val['cart_quantity']
+//            ];
+//        }, $params['order']->product_list);
+//
+//        // Datos basico del pedido
+//        $orden = [
+//            'id'             => $params['order']->id,
+//            'reference'      => $params['order']->reference, // La referencia de la orden, esto lo asigna el prestashp para identificar el pedido
+//            'fecha_creacion' => $params['order']->date_add,
+//            'productos'      => $productos
+//        ];
+//
+//        try {
+//            /**
+//             * Esta es la instancia de la clase con la que guardo los datos en la bd
+//             * @var SoapSapDbUtils
+//             */
+//            $wsDataObj = new SoapSapDbUtils();
+//
+//            /**
+//             * Instancia de la clase con la que manejo las conexiones al webservice
+//             */
+//            $wsConnection = new WebServiceHandle();
+//            /**
+//             * Seteo los datos basicos del cliente
+//             */
+//            $wsConnection->cliente = [
+//                'codCliente' => $params['customer']->cedula,
+//                'nombre'     => $params['customer']->firstname,
+//                'apellidos'  => $params['customer']->lastname,
+//                'email'      => $params['customer']->email,
+//            ];
+//            /**
+//             * defino las urls de los wsdl de los servicios del webservice
+//             */
+//            $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
+//            $wsConnection->ordersService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/OrdersService.wsdl';
+//
+//
+//            /**
+//             * Me conecto al webservice y verifico si hay error o no
+//             */
+//            if( $wsConnection->login() ){
+//                $this->log->info('***************************Se abrio correctamente la sesion SAP**************************************');
+//                $wsDataObj->sessionId = $wsConnection->sessionId;
+//                /**
+//                 * Seteo la cedula en la instancia del active record para mas
+//                 * adelante guardarlo en la base de datos
+//                 */
+//                $wsDataObj->codCliente = $params['customer']->cedula;
+//            }else{
+//                $this->log->error('***************************No se pudo iniciar la sesion en SAP.**************************************');
+//            }
+//            /**
+//             * Llamo el metodo que me envia la orden al webservice y verifico que no haya error
+//             */
+//            $numOrden = $wsConnection->order($orden);
+//            if( $numOrden ){
+//                /**
+//                 * Guardo el resto de datos en la instancia del active record (orm)
+//                 */
+//                $wsDataObj->created_at = date("Y-m-d H:i:s");
+//                $wsDataObj->numOrden = $numOrden;
+//                $wsDataObj->numOrdenPS = $params['order']->id;
+//            }
+//
+//            /**
+//             * Llamo al metodo de deslogueo del webservice que me cierra la sesion en sap
+//             * y verifico que no hayan errores
+//             */
+//            if( $wsConnection->logout() ){
+//                /**
+//                 * ejecuto el metodo del active record que me guarda el objeto en la bd
+//                 * si hay algun error guardo la info en un log
+//                 */
+//                $wsData = $wsDataObj->add();
+//                if( !wsData ){
+//                    $this->log->error('fallo al crear el reg en BD', $wsData );
+//                }
+//                $this->log->info('****************************Se cerro la sesion correctamente en SAP***********************************');
+//            }else{
+//                $this->log->error('***************************No se pudo cerrar la sesion en SAP*****************************************');
+//            }
+//        } catch (Exception $e) {
+//            $this->log->error('Hubo un error en el catch de las conexiones al sap.', $e);
+//        }
+//
+//        return true;
+//    }
 
     public function hookActionCustomerAccountAdd($params, $p2, $p3, $p4, $p5, $p6){
         $this->log->warning('Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($params));
