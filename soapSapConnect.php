@@ -206,7 +206,7 @@ class SoapSapConnect extends Module
     }
 
     public function hookActionPaymentConfirmation($params) {
-        $this->log->info('*** **** *** *** *** *** *** *** ** *** *** *** *** *** ** *********************');
+        $this->log->warning('*** **** *** *** *** *** *** *** ** *** *** *** *** *** ** *********************');
 
         $this->log->warning('Se lanzo el hook de ActionPaymentConfirmation revisar: '.json_encode($params));
         try {
@@ -220,14 +220,14 @@ class SoapSapConnect extends Module
 
             $data = Db::getInstance()->executeS($query);
 
-            $this->log->info('-hookActionPaymentConfirmation Datos consulta cliente'. json_encode($data) );
+            $this->log->info('-hookActionPaymentConfirmation Datos consulta cliente: '. json_encode($data) );
 
 
         } catch (Exception $e) {
             $this->log->error('Hubo un error al tratar de ahcer la cinsylta del cliente.', $e);
         }
 
-        $this->log->info('*** **** *** *** *** *** *** *** ** *** *** *** *** *** ** *********************');
+        $this->log->warning('*** **** *** *** *** *** *** *** ** *** *** *** *** *** ** *********************');
 
         return true;
     }
