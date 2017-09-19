@@ -220,8 +220,17 @@ class SoapSapConnect extends Module
 
             $data = Db::getInstance()->executeS($query);
 
-            $this->log->info('-hookActionPaymentConfirmation Datos consulta cliente: '. json_encode($data) );
+            $order=new Order(61);
+            $products=$order->getProducts(true);
 
+            $ProductDetailObject = new OrderDetail;
+            $product_detail = $ProductDetailObject->getList(61);
+
+            $this->log->info('-Datos consulta cliente: '. json_encode($data) );
+
+            $this->log->info('-Order->getProducts: '. json_encode($products) );
+
+            $this->log->info('-ProductDetailObject->getList: '. json_encode($product_detail) );
 
         } catch (Exception $e) {
             $this->log->error('Hubo un error al tratar de ahcer la cinsylta del cliente.', $e);
