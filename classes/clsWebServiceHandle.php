@@ -70,7 +70,7 @@ class WebServiceHandle {
         if(!$error){
             $params = [
                 'DatabaseServer'  => '192.168.10.102', //string
-                'DatabaseName'    => 'MERCHANDISING', //string
+                'DatabaseName'    => 'VELEZ', //string
                 'DatabaseType'    => 'dst_MSSQL2012', //DatabaseType
                 'CompanyUsername' => 'manager', //string
                 'CompanyPassword' => 'Pa$$w0rd', //string
