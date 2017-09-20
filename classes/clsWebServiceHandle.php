@@ -256,7 +256,7 @@ class WebServiceHandle {
                         . "<U_BPCO_TDC>13</U_BPCO_TDC>"
                         . "<U_BPCO_CS>05001</U_BPCO_CS>"
                         . "<U_BPCO_TP>01</U_BPCO_TP>"
-                        . "<U_TRASP>01</U_TRASP>"
+                        . "<U_TRASP>14</U_TRASP>"
                         . "<U_BPCO_Nombre>{$user['name']}</U_BPCO_Nombre>"
                         . "<U_BPCO_1Apellido>{$user['lastName']}</U_BPCO_1Apellido>"
                         . "<U_FEC_CREA>{$user['dateAdd']}</U_FEC_CREA>"
