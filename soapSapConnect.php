@@ -359,7 +359,10 @@ class SoapSapConnect extends Module
     }
 
     public function hookActionCustomerAccountAdd($params, $p2, $p3, $p4, $p5, $p6){
-        $this->log->warning('Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($params));
+        $this->log->warning('1 Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($params));
+        $this->log->warning('2 Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($p2));
+        $this->log->warning('3 Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($p3));
+        $this->log->warning('4 Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($p4));
         return true;
     }
 
