@@ -361,7 +361,6 @@ class SoapSapConnect extends Module
     public function hookActionCustomerAccountAdd($params){
         $this->log->warning('- Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($params));
 
-        $address = new Address(intval());
         $user = [
             'id'       => $params['_POST']['cedula'],
             'fullName' => $params['_POST']['customer_firstname'].' '.$params['_POST']['customer_lastname'],
