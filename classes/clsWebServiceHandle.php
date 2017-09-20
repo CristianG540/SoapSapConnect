@@ -26,6 +26,12 @@ class WebServiceHandle {
      */
     protected $ordersService;
     /**
+     * Url del wsdl del servicio "BusinessPartners" para crear un cliente nuevo
+     * en sap
+     * @var string
+     */
+    protected $newUserService;
+    /**
      * Variable donde guardo la instancia de monolog para hacer el log y debug de los datos
      * @var string
      */
@@ -198,6 +204,94 @@ class WebServiceHandle {
             return false;
         }
     }
+
+    /**
+     * El metodo newUser se encarga de enviar la peticion al servicio de BusinessPartners
+     * de SAP, lo que me crea un nuevo cliente en sap que me permite realizar ordenes
+     * @param  array $user un array de los datos del cliente con el sgte formato
+     *  [
+            'id'       => string,
+            'fullName' => string,
+            'name'     => string,
+            'lastName' => string,
+            'address'  => string,
+            'email'    => string,
+            'telCel'   => number,
+            'telHome'  => number
+        ]
+     * @param  string $sessionId Opcionalmente se le puede enviar el id de la sesion en sap con el que
+     * se quiere procesar la orden
+     * @return integer  me regresa el id que se le asigno en sap al usuario
+     */
+    public function newUser($user, $sessionId = '') {
+        $id = ($sessionId) ? $sessionId : $this->sessionId;
+
+        /**
+         * El metodo "Add" del webservice pide unos headers entonces los agrego
+         */
+        $paramsH = [
+            'SessionID'   => $id,
+            'ServiceName' => 'BusinessPartnersService'
+        ];
+        $this->newUserService->setHeaders(['MsgHeader' => $paramsH]);
+
+        $error = $this->newUserService->getError();
+        if(!$error){
+            /**
+             * Armo la estructura xml que le voy a enviar al metodo Add del webservice
+             */
+            $soapRes = $this->newUserService->call('Add', ''
+                . '<Add>'
+                    . '<BusinessPartner>'
+                        . "<CardCode>c{$user['id']}</CardCode>"
+                        . "<CardName>{$user['fullName']}</CardName>"
+                        . "<CardType>cCustomer</CardType>"
+                        . "<Address>{$user['address']}</Address>"
+                        . "<MailAddress>{$user['email']}</MailAddress>"
+                        . "<Phone1>{$user['telCel']}</Phone1>"
+                        . "<Phone2>{$user['telHome']}</Phone2>"
+                        . "<FederalTaxID>{$user['id']}</FederalTaxID>"
+                        . "<U_BPCO_RTC>PN</U_BPCO_RTC>"
+                        . "<U_BPCO_TDC>13</U_BPCO_TDC>"
+                        . "<U_BPCO_CS>05001</U_BPCO_CS>"
+                        . "<U_BPCO_TP>01</U_BPCO_TP>"
+                        . "<U_TRASP>01</U_TRASP>"
+                        . "<U_BPCO_Nombre>{$user['name']}</U_BPCO_Nombre>"
+                        . "<U_BPCO_1Apellido>{$user['lastName']}</U_BPCO_1Apellido>"
+                    . '</BusinessPartner>'
+                . '</Add>'
+                );
+
+            /**
+             * Me trae la peticion en xml crudo de lo que se envio por soap al sap
+             * algo asi como soap envelope bla, bla
+             */
+            $this->log->info('Request orden es: '.$this->newUserService->request);
+            /**
+             * Lo mismo que el anterior, pero en vez de traer la peticion, trae la respuesta
+             */
+            $this->log->info('Response orden es: '.$this->newUserService->response);
+            /**
+             * Me devuelve el string con todo el debug de todos los procesos que ha hecho nusoap
+             * para activarlo hay q setear el nivel de debug a mas de 0 ejemplo: "$this->ordersService->setDebugLevel(9);"
+             */
+            $this->log->info('Debug orden es: '.$this->newUserService->debug_str);
+            // Verifico que no haya ningun error, tambien reviso si existe exactamente la ruta del array que especifico
+            // si esa rut ano existe significa que algo raro paso muy posiblemente un error
+            $error = $this->newUserService->getError();
+            if($error){
+                $this->log->error('Error al hacer el pedido SAP: '. json_encode($error) );
+                $this->log->error("respuesta del error pedido a SAP: ". json_encode($this->utf8ize($soapRes)) );
+                return false;
+            }
+            $this->log->info("respuesta del pedido a SAP: ". json_encode($this->utf8ize($soapRes)) );
+            return $soapRes;
+        }else{
+            $this->log->error('Error al procesar la orden SAP: '. json_encode($error) );
+            return false;
+        }
+    }
+
     /**
      * solve JSON_ERROR_UTF8 error in php json_encode
      * esta funcionsita me corrije un error que habia al tratar de hacerle json encode aun array con tildes
@@ -224,6 +318,8 @@ class WebServiceHandle {
                 return $this->loginService;
             case 'ordersService':
                 return $this->ordersService;
+            case 'newUserService':
+                return $this->newUserService;
             case 'cliente':
                 return $this->cliente;
             case 'sessionId':
@@ -248,6 +344,10 @@ class WebServiceHandle {
             case 'ordersService':
                 $this->ordersService = new nusoap_client($value, true);
                 $this->ordersService->setDebugLevel(0);
+                break;
+            case 'newUserService':
+                $this->newUserService = new nusoap_client($value, true);
+                $this->newUserService->setDebugLevel(0);
                 break;
             case 'cliente':
                 $this->cliente = $value;

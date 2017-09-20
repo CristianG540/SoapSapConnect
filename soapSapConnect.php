@@ -358,11 +358,60 @@ class SoapSapConnect extends Module
         return true;
     }
 
-    public function hookActionCustomerAccountAdd($params, $p2, $p3, $p4, $p5, $p6){
-        $this->log->warning('1 Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($params));
-        $this->log->warning('2 Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($p2));
-        $this->log->warning('3 Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($p3));
-        $this->log->warning('4 Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($p4));
+    public function hookActionCustomerAccountAdd($params){
+        $this->log->warning('- Se lanzo el hook de ActionCustomerAccountAdd revisar: '.json_encode($params));
+
+        $address = new Address(intval());
+        $user = [
+            'id'       => $params['_POST']['cedula'],
+            'fullName' => $params['_POST']['customer_firstname'].' '.$params['_POST']['customer_lastname'],
+            'name'     => $params['_POST']['customer_firstname'],
+            'lastName' => $params['_POST']['customer_lastname'],
+            'address'  => $params['_POST']['address1'].'-'.$params['_POST']['city'],
+            'email'    => $params['_POST']['email'],
+            'telCel'   => $params['_POST']['phone_mobile'],
+            'telHome'  => $params['_POST']['phone']
+        ];
+
+        /**
+        * Instancia de la clase con la que manejo las conexiones al webservice
+        */
+        $wsConnection = new WebServiceHandle();
+        /**
+        * defino las urls de los wsdl de los servicios del webservice
+        */
+        $wsConnection->loginService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/LoginService.wsdl';
+        /**
+        * Me conecto al webservice y verifico si hay error o no
+        */
+        if( $wsConnection->login() ){
+           $this->log->info('***************************Se abrio correctamente la sesion SAP**************************************');
+
+            /**
+             * defino las urls de los wsdl de los servicios del webservice
+             */
+            $wsConnection->newUserService = 'http://b1ws.igbcolombia.com/B1WS/WebReferences/BusinessPartnersService.wsdl';
+            $nitUser = $wsConnection->newUser($user);
+
+            if( $nitUser ){
+                $this->log->info('SE CREO EL CLIENTE CORRECTAMENTE');
+            }
+
+            /**
+            * Llamo al metodo de deslogueo del webservice que me cierra la sesion en sap
+            * y verifico que no hayan errores
+            */
+            if( $wsConnection->logout() ){
+               $this->log->info('****************************Se cerro la sesion correctamente en SAP***********************************');
+
+            }else{
+               $this->log->error('***************************No se pudo cerrar la sesion en SAP*****************************************');
+            }
+
+        }else{
+           $this->log->error('***************************No se pudo iniciar la sesion en SAP.**************************************');
+        }
+
         return true;
     }
 
