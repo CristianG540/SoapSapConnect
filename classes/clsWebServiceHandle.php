@@ -151,6 +151,7 @@ class WebServiceHandle {
             $carry .= '<DocumentLine>'
                             . "<ItemCode>{$item['referencia']}</ItemCode>"
                             . "<Quantity>{$item['cantidad']}</Quantity>"
+                            . "<DiscountPercent>{$item['descuento']}</DiscountPercent>"
                     . '</DocumentLine>';
             return $carry;
         }, '');

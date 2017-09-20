@@ -221,9 +221,13 @@ class SoapSapConnect extends Module
 
             // el array map funciona parecido al _.map de underscore
             $productos = array_map(function ($val){
+                $precioBase = (int)$val['price_without_reduction'];
+                $precioDescuento = (int)$val['price_with_reduction'];
+                $descuento = ($precioBase-$precioDescuento)/$precioBase*100;
                 return [
                     'referencia' => $val['reference'],
-                    'cantidad'   => $val['quantity']
+                    'cantidad'   => $val['quantity'],
+                    'descuento'  => $descuento
                 ];
             }, $params['cart']->getProducts(true) );
 
