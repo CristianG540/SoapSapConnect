@@ -324,7 +324,7 @@ class SoapSapConnect extends Module
 
             $this->log->info('-Datos consulta cliente: '. json_encode($dCustomer[0]) );
 
-            $this->log->info('-productos: '. json_encode($productos) );
+            $this->log->info('-productos: '. json_encode( $params['cart']->getProducts(true) ) );
 
             $this->log->info('-Order: '. json_encode($dOrder) );
 
