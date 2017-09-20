@@ -244,7 +244,7 @@ class WebServiceHandle {
             $soapRes = $this->newUserService->call('Add', ''
                 . '<Add>'
                     . '<BusinessPartner>'
-                        . "<CardCode>c{$user['id']}</CardCode>"
+                        . "<CardCode>C{$user['id']}</CardCode>"
                         . "<CardName>{$user['fullName']}</CardName>"
                         . "<CardType>cCustomer</CardType>"
                         . "<Address>{$user['address']}</Address>"
