@@ -370,7 +370,8 @@ class SoapSapConnect extends Module
             'address'  => $params['_POST']['address1'].'-'.$params['_POST']['city'],
             'email'    => $params['_POST']['email'],
             'telCel'   => $params['_POST']['phone_mobile'],
-            'telHome'  => $params['_POST']['phone']
+            'telHome'  => $params['_POST']['phone'],
+            'dateAdd'  => $params['newCustomer']['date_add']
         ];
 
         /**

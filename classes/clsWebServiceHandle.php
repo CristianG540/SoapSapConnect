@@ -217,7 +217,8 @@ class WebServiceHandle {
             'address'  => string,
             'email'    => string,
             'telCel'   => number,
-            'telHome'  => number
+            'telHome'  => number,
+            'dateAdd'  => year-month-day hour:minute:second
         ]
      * @param  string $sessionId Opcionalmente se le puede enviar el id de la sesion en sap con el que
      * se quiere procesar la orden
@@ -258,6 +259,7 @@ class WebServiceHandle {
                         . "<U_TRASP>01</U_TRASP>"
                         . "<U_BPCO_Nombre>{$user['name']}</U_BPCO_Nombre>"
                         . "<U_BPCO_1Apellido>{$user['lastName']}</U_BPCO_1Apellido>"
+                        . "<U_FEC_CREA>{$user['dateAdd']}</U_FEC_CREA>"
                     . '</BusinessPartner>'
                 . '</Add>'
                 );
