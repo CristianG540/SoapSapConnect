@@ -282,14 +282,18 @@ class WebServiceHandle {
             // si esa rut ano existe significa que algo raro paso muy posiblemente un error
             $error = $this->newUserService->getError();
             if($error){
-                $this->log->error('Error al hacer el pedido SAP: '. json_encode($error) );
-                $this->log->error("respuesta del error pedido a SAP: ". json_encode($this->utf8ize($soapRes)) );
+                $this->log->error('Error al crear el cliente SAP: '. json_encode($error) );
+                $this->log->error("respuesta del error crear cliente a SAP: ". json_encode($this->utf8ize($soapRes)) );
+                return false;
+            }
+            if(isset($soapRes['Code']['Subcode']['Value'])){
+                $this->log->error('Error al crear el cliente SAP: '. json_encode($this->utf8ize($soapRes['Reason'])) );
                 return false;
             }
             $this->log->info("respuesta del pedido a SAP: ". json_encode($this->utf8ize($soapRes)) );
-            return $soapRes;
+            return $soapRes["BusinessPartnerParams"]["CardCode"];
         }else{
-            $this->log->error('Error al procesar la orden SAP: '. json_encode($error) );
+            $this->log->error('Error al procesar la creacion del cliente SAP: '. json_encode($error) );
             return false;
         }
     }
